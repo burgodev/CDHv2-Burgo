@@ -153,7 +153,7 @@
   }
 
   /*.timeRegister-color {*/
-  /*background-image: url("./assets/teste.jpg")*/
+  /*background-image: url("./assets/selected.jpg")*/
   /*}*/
 
   .timeRegister-color2 {

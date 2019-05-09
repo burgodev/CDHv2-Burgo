@@ -43,18 +43,6 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              :disabled="!valid"
-              round
-              outline
-              small
-              class="custom-btn"
-            >
-              Confirmar
-            </v-btn>
-
-
-            <v-btn
-
               @click="cancel"
               round
               outline
@@ -62,6 +50,17 @@
               class="custom-btn"
             >
               Cancelar
+            </v-btn>
+
+            <v-btn
+              @click="confirm"
+              :disabled="!valid"
+              round
+              outline
+              small
+              class="custom-btn"
+            >
+              Confirmar
             </v-btn>
 
           </v-card-actions>
@@ -74,6 +73,10 @@
 </template>
 
 <script>
+  import
+    AdminApi
+  from '../requests'
+
   export default {
     name: "JustifyAbsence",
 
@@ -115,6 +118,10 @@
       // resetValidation () {
       //   this.$refs.form.resetValidation()
       // }
+
+     async confirm() {
+        let ret = await AdminApi.justifyAbsence(data);
+      },
 
       open() {
         this.dialog = true;

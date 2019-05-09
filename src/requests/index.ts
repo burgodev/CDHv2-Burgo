@@ -9,7 +9,6 @@ let configs: config = {
 };
 
 
-
 let AdminRequest = new adminRequests(configs);
 let OpenRequest = new openRequests(configs);
 let UserRequest = new userRequest(configs);
@@ -27,46 +26,59 @@ export interface config {
 
 export interface createUser {
   Data: {
-    email: String,
-    name: String,
-    surname: String,
-    password: String,
-    birthday: Number,
-    cpf: Number,
-    entryDate: Number,
-    exitDate: Number
+    email: string,
+    name: string,
+    surname: string,
+    password: string,
+    birthday: number,
+    cpf: number,
+    Date: number,
+    exitDate: number,
+    isAdmin: boolean
   }
 }
 
 export interface deleteUser {
-  userId: String,
+  userId: string,
 }
 
 export interface loginData {
-  login: String,
-  password: String
+  login: string,
+  password: string
 }
 
 export interface paramsCdhConsult {
-  userId: String,
-  month: Number,
-  Year: Number
+  userId: string,
+  month: number,
+  Year: number
 
 }
 
 export interface updateUser {
-  update: object,
-  email: string,
-  name: string,
-  surname: string,
-  birthday: number,
-  cpf: number,
-  entryDate: number,
-  exitDate: number,
+  Data: {
+    id: string,
+    update: {
+      email?: string,
+      name?: string,
+      surname?: string,
+      birthday?: number,
+      cpf?: number,
+      entryDate?: number,
+      exitDate?: number,
+    }
+  }
 }
 
-
-export interface entry{
-  userId: number,
-  expectedExit: number
+export interface justifyAbsence {
+  Data:{
+    userId: string,
+    currentTimeRegister: string,
+    year: number,
+    month: number,
+    day: number,
+    justification: {
+      text: string,
+      time: number
+    }
+  }
 }

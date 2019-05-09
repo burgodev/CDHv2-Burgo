@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {config, createUser, deleteUser, updateUser} from '../'
+import {config, createUser, deleteUser, updateUser, justifyAbsence} from '../'
 import {Utils} from "@/requests/utils/Utils";
 
 export class adminRequests {
@@ -50,7 +50,6 @@ export class adminRequests {
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: `/api/admin/user/delete/${userId}`,
         method: 'delete',
-        // params: userId,
         headers: await Utils.handlerHead(),
       });
       return ret.data;
@@ -59,13 +58,13 @@ export class adminRequests {
     }
   }
 
-  public async updateUser(data: updateUser){
+  public async updateUser(update: updateUser){
     try {
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: '/api/admin/user/update',
         method: 'put',
-        data: data,
+        data: {update},
         headers: await Utils.handlerHead(),
       });
       return ret.data;
@@ -74,14 +73,28 @@ export class adminRequests {
     }
   }
 
-
-  public async cdhConsult(userId: String, month: number, year: number){
+  public async adminCdhConsult(userId: string, month: number, year: number){
     try {
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: `/api/admin/report/${userId}/${month}/${year}`,
         method: 'get',
         // params: userId,
+        headers: await Utils.handlerHead(),
+      });
+      return ret.data;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  public async justifyAbsence(data: justifyAbsence){
+    try {
+      let ret = await axios({
+        baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
+        url: '/api/admin/user/justify/update/',
+        method: 'post',
+        data: data,
         headers: await Utils.handlerHead(),
       });
       return ret.data;

@@ -46,7 +46,7 @@
             <v-layout justify-end align-center>
               <v-layout justify-end>
 
-                <v-btn class="custom-btn" icon fab round v-on="">
+                <v-btn class="custom-btn" icon fab round @click="cdhSearch">
                   <v-icon class="custom-btn">search</v-icon>
                 </v-btn>
 
@@ -145,8 +145,7 @@
     data: () => ({
       testOsv: true,
       search: '',
-      teste: false,
-      selectedButtonColorCdhCdh: true,
+      selected: false,
       headers: [
 
         {text: 'Dia', value: 'day', align: 'center'},
@@ -171,7 +170,7 @@
 
     computed: {
       sessionButton(){
-        if(this.teste) return'primary';
+        if(this.selected) return'primary';
       },
 
       formTitle() {
@@ -187,56 +186,56 @@
         // let ret = await AdminAPI.cdhConsult()
 
         this.timeRegister = [
-          {
-            day: 1,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-
-          },
-
-          {
-            day: 2,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-          },
-
-          {
-            day: 3,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-          },
-
-          {
-            day: 4,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-          },
-
-          {
-            day: 5,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-          },
-
-          {
-            day: 6,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-          },
-
-
-          {
-            day: 6,
-            entry: "14:00",
-            exit: "18:00",
-            timeWorked: 4,
-          },
+          // {
+          //   day: 1,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          //
+          // },
+          //
+          // {
+          //   day: 2,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          // },
+          //
+          // {
+          //   day: 3,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          // },
+          //
+          // {
+          //   day: 4,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          // },
+          //
+          // {
+          //   day: 5,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          // },
+          //
+          // {
+          //   day: 6,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          // },
+          //
+          //
+          // {
+          //   day: 6,
+          //   entry: "14:00",
+          //   exit: "18:00",
+          //   timeWorked: 4,
+          // },
 
 
         ]
@@ -248,24 +247,42 @@
       },
 
       async sessionControl() {
-        this.teste = !this.teste;
-        this.$refs.ExpectedExit.open({});
+        this.selected = !this.selected;
+        let id = await localStorage.getItem('id');
+
+        if (this.selected){
+          this.$refs.ExpectedExit.open({});
+        }
+        else {
+          let ret = await UserAPI.exit(id);
+          console.log('exit', ret);
+
+          this.cdhSearch();
+        }
+      },
+
+      async cdhSearch(){
+        let date = new Date();
+        let month = date.getMonth();
+        let year = date.getFullYear();
+        let id = localStorage.getItem('id');
+
+        let ret = await UserAPI.userCdhConsult(id, month, year);
+        console.log('userCdhConsult', ret);
 
 
-        // this.timeRegister =
+        //não ta alimentando a tabela da maneira corret ainda(falta o entry e exit).
+        this.timeRegister = ret.data[0].days;
 
-        // let id = await localStorage.getItem('id');
-        // let expectedExit = await localStorage.getItem('expectedExit')
+        console.log(this.timeRegister);
+        console.log(ret.data[0].days);
+
+        // this.timeRegister.day = ret.data[0].days;
+        // this.timeRegister.timeWorked = ret.data[0].days.timeWorked;
+        // this.timeRegister.entry = ret.data[0].days.entryExit[0];
         //
-        // let date = new Date()
-        //
-        // date.setHours(expectedExit)
-        //
-        // console.log(date());
-        //
-        // let ret = await UserAPI.entry(id, date.getTime() + 5000)
-        //
-        // console.log('create user', ret);
+        // console.log(this.timeRegister);
+        // console.log(ret.data[0].days);
       }
     }
   }

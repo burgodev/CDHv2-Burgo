@@ -80,6 +80,7 @@
           localStorage.setItem('authenticationKey', ret.data.authenticationKey);
           localStorage.setItem('accessKey', ret.data.accessKey);
           localStorage.setItem('id', ret.data.id);
+          console.log()
 
           this.$router.replace('/cdhBurgo')
         }

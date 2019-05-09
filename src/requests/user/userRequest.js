@@ -52,5 +52,19 @@ export class userRequest {
             return e;
         }
     }
+    async userCdhConsult(userId, month, year) {
+        try {
+            let ret = await axios({
+                baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
+                url: `/api/user/report/${userId}/${month}/${year}`,
+                method: 'get',
+                headers: await Utils.handlerHead(),
+            });
+            return ret.data;
+        }
+        catch (e) {
+            return e;
+        }
+    }
 }
 //# sourceMappingURL=userRequest.js.map

@@ -165,6 +165,7 @@
   import axios from 'axios';
   import {
     AdminAPI,
+
   } from '../requests';
 
   export default {
@@ -273,10 +274,15 @@
 
       async save() {
         if (this.editedIndex > -1) {
-          Object.assign(this.users[this.editedIndex], this.editedItem)
+          Object.assign(this.users[this.editedIndex], this.editedItem);
           // axios.put('https://localhost:1337/api/' + this.editedItem._id, this.editedItem)
 
-          let ret = await AdminAPI.updateUser(this.editedItem)
+          console.log(this.editedItem.id);
+          // let ret = await AdminAPI.updateUser(this.editedItem);
+
+          //NAO TA FUNCIONANTE
+          let ret = await AdminAPI.updateUser(this.editedItem);
+
           console.log('update user', ret)
         } else {
 
