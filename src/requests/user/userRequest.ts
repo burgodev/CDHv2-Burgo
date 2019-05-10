@@ -8,7 +8,6 @@ export class userRequest {
 
   constructor(configs: config) {
     this._config = configs;
-    console.log('configsADMIN', configs)
   }
 
   private get config() {

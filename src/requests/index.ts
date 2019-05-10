@@ -32,7 +32,7 @@ export interface createUser {
     password: string,
     birthday: number,
     cpf: number,
-    Date: number,
+    date: number,
     exitDate: number,
     isAdmin: boolean
   }

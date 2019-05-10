@@ -14,18 +14,21 @@
 
 
           <v-flex xs6 sm6 md4 d-flex>
-            <v-select v-if="testOsv"
-                      :items="items"
+            <v-select
+                      v-model="selectUser"
+                      :items="users"
+                      item-text="name"
+                      item-value="id"
                       label="User"
+                      @click="selectedUser"
             ></v-select>
-            <h1 v-else> eu sou um usuario logado</h1>
           </v-flex>
 
           <v-spacer></v-spacer>
 
           <v-flex xs6 sm6 md2 d-flex>
             <v-select
-              :items="items"
+              :items="month"
               label="Month"
             ></v-select>
           </v-flex>
@@ -34,7 +37,7 @@
 
           <v-flex xs6 sm6 md2 d-flex>
             <v-select
-              :items="items"
+              :items="year"
               label="Year"
             ></v-select>
           </v-flex>
@@ -58,12 +61,6 @@
               ></v-divider>
 
 
-              <!--<v-layout wrap>-->
-              <!--<v-btn round outline small class="custom-btn" v-on="on">-->
-              <!--<v-icon class="custom-btn" >power_settings_new</v-icon>-->
-              <!--</v-btn>-->
-              <!--</v-layout>-->
-
               <v-layout wrap>
                 <v-tooltip  color="primary" bottom>
                   <template v-slot:activator="{ on }">
@@ -75,13 +72,6 @@
                 </v-tooltip>
               </v-layout>
 
-              <!--<v-btn v-on:click="logout" class="custom-btn" icon round >-->
-              <!--<v-icon class="custom-btn" color="white" >logout</v-icon>-->
-              <!--</v-btn>-->
-
-              <!--<v-btn icon  round class="custom-btn" v-on="beginSession">-->
-              <!--<v-icon class="custom-btn" dark>power_settings_new</v-icon>-->
-              <!--</v-btn>-->
             </v-layout>
           </v-flex>
 
@@ -120,6 +110,7 @@
 
         </v-data-table>
 
+
         <JustifyAbsence ref="JustifyAbsence"/>
         <ExpectedExit ref="ExpectedExit"/>
 
@@ -132,16 +123,21 @@
   import JustifyAbsence from "../components/JustifyAbsence";
   import ExpectedExit from "../components/ExpectedExit";
   import {
-    UserAPI,
+    AdminAPI,
+    UserAPI
+
   } from '../requests';
 
 
+
+
   export default {
-    name: "Cdh",
+    name: "AdminCDH",
     components: {ExpectedExit, JustifyAbsence},
 
     data: () => ({
       testOsv: true,
+      selectUser: null,
       search: '',
       selected: false,
       headers: [
@@ -155,13 +151,17 @@
 
       ],
       timeRegister: [],
-      items: []
+      users: [],
+      month:[],
+      year:[]
 
     }),
 
 
     mounted() {
       this.initialize()
+
+
 
     },
 
@@ -179,8 +179,8 @@
 
     methods: {
       async initialize() {
-
         this.adminCdhSearch();
+        this.getUser();
 
 
       },
@@ -209,17 +209,27 @@
         let date = new Date();
         let month = date.getMonth();
         let year = date.getFullYear();
-        let id = localStorage.getItem('id');
+        let id;
 
-        let ret = await UserAPI.userCdhConsult(id, month, year);
-        console.log('UserCdhConsult', ret);
+        if(!this.selectUser) {
+          id = localStorage.getItem('id');
+
+        } else {
+          id = this.selectedUser
+        }
+
+        let ret = await AdminAPI.adminCdhConsult(id, month, year);
+        console.log('adminCdhConsult', ret);
 
 
         //não ta alimentando a tabela da maneira corret ainda(falta o entry e exit).
-        this.timeRegister = ret.data[0].days;
+        console.log('testee', ret.data[0].days)
 
-        console.log(this.timeRegister);
-        console.log(ret.data[0].days);
+        if (ret.data[0].days){
+          console.log(ret.data[0].days)
+          this.timeRegister = ret.data[0].days;
+        }
+
 
         // this.timeRegister.day = ret.data[0].days;
         // this.timeRegister.timeWorked = ret.data[0].days.timeWorked;
@@ -227,7 +237,24 @@
         //
         // console.log(this.timeRegister);
         // console.log(ret.data[0].days);
+      },
+
+      async getUser(){
+
+        let ret = await AdminAPI.readAllUsers();
+        console.log('getUser', ret);
+
+
+        this.users = ret.data;
+
+
+      },
+
+      selectedUser(){
+
+
       }
+
     }
   }
 

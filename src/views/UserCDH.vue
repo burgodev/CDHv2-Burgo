@@ -2,7 +2,6 @@
   <v-container fluid fill-height >
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
-
         <v-toolbar flat>
           <v-toolbar-title class="primary--text">CDH</v-toolbar-title>
 
@@ -13,31 +12,23 @@
           ></v-divider>
 
 
+          <v-layout justify-start space-around>
           <v-flex xs6 sm6 md4 d-flex>
-            <v-select v-if="testOsv"
-                      :items="items"
-                      label="User"
-            ></v-select>
-            <h1 v-else> eu sou um usuario logado</h1>
-          </v-flex>
-
-          <v-spacer></v-spacer>
-
-          <v-flex xs6 sm6 md2 d-flex>
             <v-select
               :items="items"
               label="Month"
             ></v-select>
           </v-flex>
 
-          <v-spacer></v-spacer>
+          <v-flex md1></v-flex>
 
-          <v-flex xs6 sm6 md2 d-flex>
+          <v-flex xs6 sm6 md4 d-flex>
             <v-select
               :items="items"
               label="Year"
             ></v-select>
           </v-flex>
+          </v-layout>
 
 
           <v-spacer></v-spacer>
@@ -46,7 +37,7 @@
             <v-layout justify-end align-center>
               <v-layout justify-end>
 
-                <v-btn class="custom-btn" icon fab round @click="adminCdhSearch">
+                <v-btn class="custom-btn" icon fab round @click="userCdhSearch">
                   <v-icon class="custom-btn">search</v-icon>
                 </v-btn>
 
@@ -126,6 +117,7 @@
       </v-flex>
     </v-layout>
   </v-container>
+
 </template>
 
 <script>
@@ -136,8 +128,10 @@
   } from '../requests';
 
 
+
+
   export default {
-    name: "Cdh",
+    name: "UserCDH",
     components: {ExpectedExit, JustifyAbsence},
 
     data: () => ({
@@ -180,7 +174,7 @@
     methods: {
       async initialize() {
 
-        this.adminCdhSearch();
+        this.userCdhSearch();
 
 
       },
@@ -201,18 +195,18 @@
           let ret = await UserAPI.exit(id);
           console.log('exit', ret);
 
-          this.adminCdhSearch();
+          this.cdhSearch();
         }
       },
 
-      async adminCdhSearch(){
+      async userCdhSearch(){
         let date = new Date();
         let month = date.getMonth();
         let year = date.getFullYear();
         let id = localStorage.getItem('id');
 
         let ret = await UserAPI.userCdhConsult(id, month, year);
-        console.log('UserCdhConsult', ret);
+        console.log('userCdhConsult', ret);
 
 
         //não ta alimentando a tabela da maneira corret ainda(falta o entry e exit).
@@ -230,7 +224,6 @@
       }
     }
   }
-
 </script>
 
 <style scoped>

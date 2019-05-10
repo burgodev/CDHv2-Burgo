@@ -110,7 +110,7 @@
       },
 
       showCdh() {
-        this.$router.replace('/cdhBurgo')
+        this.$router.replace('/adminCDH')
         this.selectedButtonColorCdh = !this.selectedButtonColorCdh;
         this.selectedButtonColorUser = false;
 

@@ -7,7 +7,6 @@ export class openRequests {
 
   constructor(configs: config) {
     this._config = configs;
-    console.log('configsOPEN', configs)
   }
 
   private get config() {

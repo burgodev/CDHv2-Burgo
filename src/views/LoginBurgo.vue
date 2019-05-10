@@ -3,7 +3,6 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
         <v-card-text>
-
           <v-text-field dark
                         ref="name"
                         v-model="user.login"
@@ -47,11 +46,9 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import axios from 'axios';
   import {
     OpenAPI,
   } from '../requests';
-
   import '../App';
 
   @Component({
@@ -80,9 +77,8 @@
           localStorage.setItem('authenticationKey', ret.data.authenticationKey);
           localStorage.setItem('accessKey', ret.data.accessKey);
           localStorage.setItem('id', ret.data.id);
-          console.log()
 
-          this.$router.replace('/cdhBurgo')
+          this.$router.replace('/AdminCDH')
         }
 
 
