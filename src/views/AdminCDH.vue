@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height >
+  <v-container fluid fill-height>
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
 
@@ -15,12 +15,14 @@
 
           <v-flex xs6 sm6 md4 d-flex>
             <v-select
-                      v-model="selectUser"
-                      :items="users"
-                      item-text="name"
-                      item-value="id"
-                      label="User"
-                      @click="selectedUser"
+              v-model="selectUser"
+              :items="users"
+              item-text="name"
+              item-value="id"
+              label="User"
+              placeholder="Admin"
+
+              @click="selectedUser"
             ></v-select>
           </v-flex>
 
@@ -62,9 +64,10 @@
 
 
               <v-layout wrap>
-                <v-tooltip  color="primary" bottom>
+                <v-tooltip color="primary" bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn  round outline small :color="sessionButton" class="custom-btn" @click="sessionControl" v-on="on">
+                    <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
+                           v-on="on">
                       <v-icon class="custom-btn">power_settings_new</v-icon>
                     </v-btn>
                   </template>
@@ -129,7 +132,15 @@
   } from '../requests';
 
 
+  function addZero(i) {
 
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+
+
+  }
 
   export default {
     name: "AdminCDH",
@@ -152,8 +163,8 @@
       ],
       timeRegister: [],
       users: [],
-      month:[],
-      year:[]
+      month: [],
+      year: []
 
     }),
 
@@ -162,13 +173,12 @@
       this.initialize()
 
 
-
     },
 
 
     computed: {
-      sessionButton(){
-        if(this.selected) return'primary';
+      sessionButton() {
+        if (this.selected) return 'primary';
       },
 
       formTitle() {
@@ -194,63 +204,77 @@
         this.selected = !this.selected;
         let id = await localStorage.getItem('id');
 
-        if (this.selected){
+        if (this.selected) {
           this.$refs.ExpectedExit.open({});
-        }
-        else {
+        } else {
+          console.log('id', id)
           let ret = await UserAPI.exit(id);
           console.log('exit', ret);
-
-          this.adminCdhSearch();
         }
+        this.adminCdhSearch();
+
       },
 
-      async adminCdhSearch(){
+
+      async adminCdhSearch() {
         let date = new Date();
         let month = date.getMonth();
         let year = date.getFullYear();
         let id;
 
-        if(!this.selectUser) {
+        if (!this.selectUser) {
           id = localStorage.getItem('id');
-
         } else {
-          id = this.selectedUser
+          id = this.selectUser;
         }
 
         let ret = await AdminAPI.adminCdhConsult(id, month, year);
         console.log('adminCdhConsult', ret);
 
+        //Alimenta a table
+        if (ret.data.length) {
+          let cdh = [];
+          let myDate = new Date();
 
-        //não ta alimentando a tabela da maneira corret ainda(falta o entry e exit).
-        console.log('testee', ret.data[0].days)
+          for (let i = 0; i < ret.data[0].days.length; i++) {
+            myDate.setTime(ret.data[0].days[i].entryExit[0].entry);
+            let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+            myDate.setTime(ret.data[0].days[i].entryExit[0].exit);
+            let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
 
-        if (ret.data[0].days){
-          console.log(ret.data[0].days)
-          this.timeRegister = ret.data[0].days;
+            cdh.push({
+              day: ret.data[0].days[i].day,
+              entry: formatedEntry,
+              exit: formatedExit,
+              timeWorked: ret.data[0].days[i].timeWorked
+            });
+          }
+
+          this.timeRegister = cdh;
+
+          console.log(cdh)
         }
+      }
+      ,
 
-
-        // this.timeRegister.day = ret.data[0].days;
-        // this.timeRegister.timeWorked = ret.data[0].days.timeWorked;
-        // this.timeRegister.entry = ret.data[0].days.entryExit[0];
-        //
-        // console.log(this.timeRegister);
-        // console.log(ret.data[0].days);
-      },
-
-      async getUser(){
-
+      async getUser() {
         let ret = await AdminAPI.readAllUsers();
         console.log('getUser', ret);
 
+        if (ret.success) {
+          this.users = ret.data;
+          let admin = {
+            name:
+              localStorage.getItem('name'),
+            id:
+              localStorage.getItem('id')
+          };
+          this.users.push(admin)
+        }
+      }
+      ,
 
-        this.users = ret.data;
-
-
-      },
-
-      selectedUser(){
+      selectedUser() {
 
 
       }

@@ -66,17 +66,17 @@
                       <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.entryDate" label="Data de Entrada"></v-text-field>
+                      <v-text-field v-model="editedItem.entryDate" label="Data de Entrada" mask="##/##/####"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.exitDate" label="Data de Saída"></v-text-field>
+                      <v-text-field v-model="editedItem.exitDate" label="Data de Saída" mask="##/##/####"></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
                       <v-text-field v-model="editedItem.cpf" label="CPF"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.birthday" label="Data de Nascimento"></v-text-field>
+                      <v-text-field v-model="editedItem.birthday" label="Data de Nascimento" mask="##/##/####"></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
@@ -199,10 +199,10 @@
         surname: 'Burgoteste',
         email: 'filipeburgoteste@gmail.com',
         cpf: '000000000',
-        entryDate: '00000000',
-        exitDate: '00000000',
+        entryDate: '',
+        exitDate: '',
         password: 'burgo',
-        birthday: '00000000',
+        birthday: '',
         id: '312321312',
         isAdm: false
       },
@@ -211,10 +211,10 @@
         surname: 'Burgoteste',
         email: 'filipeburgoteste',
         cpf: '000000000',
-        entryDate: '00000000',
-        exitDate: '00000000',
+        entryDate: '',
+        exitDate: '',
         password: 'burgo',
-        birthday: '00000000',
+        birthday: '',
         id: '2132132',
         isAdm: false
       }
@@ -285,6 +285,31 @@
 
           console.log('update user', ret)
         } else {
+
+
+          //nao ta funcionando! Nao ta convertendo direito pra timeStamp ainda. Talvez usar o splice pra dividir os dados
+          //pra dia mes e ano e dps dar um set e um get seja mais facil
+          let newUser = [];
+          newUser = this.editedItem;
+          console.log('newUser', newUser)
+          let timeStampEntry = newUser.entryDate;
+          let timeStampExit = newUser.exitDate;
+          let timeStampBirthday = newUser.birthday;
+
+          let entry = new Date();
+          let exit = new Date();
+          let birthday = new Date();
+
+          entry.setTime(timeStampEntry)
+          exit.setDate(timeStampExit)
+          birthday.setDate(timeStampBirthday)
+
+          // newUser.entryDate = entry.getTime();
+          // newUser.entryDate = entry.getTime();
+          // newUser.entryDate = entry.getTime();
+          //
+
+          console.log(entry.getTime());
 
           let ret = await AdminAPI.createUser(this.editedItem);
           console.log('create user', ret);

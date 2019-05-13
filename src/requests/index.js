@@ -12,4 +12,3 @@ let UserRequest = new userRequest(configs);
 export { AdminRequest as AdminAPI };
 export { OpenRequest as OpenAPI };
 export { UserRequest as UserAPI };
-//# sourceMappingURL=index.js.map

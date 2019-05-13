@@ -77,8 +77,11 @@
           localStorage.setItem('authenticationKey', ret.data.authenticationKey);
           localStorage.setItem('accessKey', ret.data.accessKey);
           localStorage.setItem('id', ret.data.id);
+          localStorage.setItem('name', ret.data.name)
 
           this.$router.replace('/AdminCDH')
+
+
         }
 
 

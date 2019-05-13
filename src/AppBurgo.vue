@@ -149,7 +149,7 @@
 
   /*!*333333*!*/
   .timeRegister-color {
-    background-image: radial-gradient(#535353, #2f2f2f);
+    background-image: radial-gradient(#535353, #111111);
   }
 
   /*.timeRegister-color {*/

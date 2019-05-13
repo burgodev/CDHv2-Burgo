@@ -2,7 +2,6 @@ import axios from 'axios';
 export class openRequests {
     constructor(configs) {
         this._config = configs;
-        console.log('configsOPEN', configs);
     }
     get config() {
         return this._config;
@@ -22,4 +21,3 @@ export class openRequests {
         }
     }
 }
-//# sourceMappingURL=openRequest.js.map

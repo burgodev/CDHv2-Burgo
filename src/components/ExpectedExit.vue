@@ -51,6 +51,9 @@
   import {
     UserAPI,
   } from '../requests';
+  import {
+    AdminCDH,
+  } from '../views/AdminCDH';
 
 
   export default {
@@ -81,10 +84,6 @@
           this.dialog = true;
       },
 
-      cancel() {
-        this.dialog = false;
-      },
-
       async confirm(){
         let id = await localStorage.getItem('id');
         let date = new Date();
@@ -101,7 +100,10 @@
         console.log('expectedExit', ret);
 
         this.dialog = false;
+
       }
+
+
     }
   }
 </script>

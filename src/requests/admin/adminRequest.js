@@ -3,7 +3,6 @@ import { Utils } from "@/requests/utils/Utils";
 export class adminRequests {
     constructor(configs) {
         this._config = configs;
-        console.log('configsADMIN', configs);
     }
     get config() {
         return this._config;
@@ -96,4 +95,3 @@ export class adminRequests {
         }
     }
 }
-//# sourceMappingURL=adminRequest.js.map

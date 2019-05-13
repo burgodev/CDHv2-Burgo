@@ -4,4 +4,3 @@ import 'vuetify/src/stylus/app.styl';
 Vue.use(Vuetify, {
     iconfont: 'md',
 });
-//# sourceMappingURL=vuetify.js.map

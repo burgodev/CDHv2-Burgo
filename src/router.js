@@ -51,4 +51,3 @@ export default new Router({
         }
     ]
 });
-//# sourceMappingURL=router.js.map

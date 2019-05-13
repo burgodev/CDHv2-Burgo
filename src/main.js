@@ -22,4 +22,3 @@ new Vue({
     store,
     render: h => h(App2)
 }).$mount('#app');
-//# sourceMappingURL=main.js.map
