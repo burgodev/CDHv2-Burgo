@@ -72,10 +72,8 @@
 
   export default {
     data: () => ({
-
       selectedButtonColorCdh: false,
       selectedButtonColorUser: false
-
     }),
 
     computed: {

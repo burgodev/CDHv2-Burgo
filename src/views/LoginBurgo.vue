@@ -49,7 +49,7 @@
   import {
     OpenAPI,
   } from '../requests';
-  import '../App';
+  import AppBurgo from "@/AppBurgo.vue";
 
   @Component({
     components: {},
@@ -69,9 +69,7 @@
     methods: {
 
       async login() {
-
         let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
-        console.log('initialize', ret);
 
         if (ret.success) {
           localStorage.setItem('authenticationKey', ret.data.authenticationKey);
@@ -80,6 +78,10 @@
           localStorage.setItem('name', ret.data.name)
 
           this.$router.replace('/AdminCDH')
+          //
+          // let AppBurgo = new AppBurgo();
+          //
+          // AppBurgo.showCdh();
 
 
         }

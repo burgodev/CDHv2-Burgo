@@ -192,6 +192,10 @@
         this.adminCdhSearch();
         this.getUser();
 
+        if (localStorage.getItem('sessionOpen') == "true") {
+          this.selected = true;
+        }
+
 
       },
 
@@ -205,14 +209,15 @@
         let id = await localStorage.getItem('id');
 
         if (this.selected) {
-          this.$refs.ExpectedExit.open({});
+          await this.$refs.ExpectedExit.open({});
+          await localStorage.setItem("sessionOpen", "true");
         } else {
-          console.log('id', id)
           let ret = await UserAPI.exit(id);
+          localStorage.setItem("sessionOpen", "false");
           console.log('exit', ret);
         }
-        this.adminCdhSearch();
 
+        await this.initialize();
       },
 
 
@@ -236,23 +241,35 @@
           let cdh = [];
           let myDate = new Date();
 
-          for (let i = 0; i < ret.data[0].days.length; i++) {
-            myDate.setTime(ret.data[0].days[i].entryExit[0].entry);
+          // for (let i = 0; i < ret.data[0].days.length; i++) {
+          //   //formata o horario e adiciona 0 caso necessário;
+          //   console.log('length', ret.data[0].days.length)
+            for (let x = 0; x < ret.data[0].days[0].entryExit.length; x++) {
+
+              console.log('teste')
+              console.log(ret.data[0].days[0].entryExit.length);
+              console.log(ret.data[0].days[0].entryExit[x]);
+
+
+
+            myDate.setTime(ret.data[0].days[0].entryExit[x].entry);
             let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-            myDate.setTime(ret.data[0].days[i].entryExit[0].exit);
+            myDate.setTime(ret.data[0].days[0].entryExit[x].exit);
             let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
 
+            if (formatedExit == "NaN:NaN:NaN")
+              formatedExit = "";
+
             cdh.push({
-              day: ret.data[0].days[i].day,
+              day: ret.data[0].days[0].day,
               entry: formatedEntry,
               exit: formatedExit,
-              timeWorked: ret.data[0].days[i].timeWorked
+              timeWorked: ret.data[0].days[0].timeWorked
             });
-          }
-
+            }
+        //   }
+          console.log('cdh', cdh)
           this.timeRegister = cdh;
-
-          console.log(cdh)
         }
       }
       ,

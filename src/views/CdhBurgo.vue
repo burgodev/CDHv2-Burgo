@@ -180,6 +180,7 @@
     methods: {
       async initialize() {
 
+
         this.adminCdhSearch();
 
 
@@ -217,6 +218,7 @@
 
         //não ta alimentando a tabela da maneira corret ainda(falta o entry e exit).
         this.timeRegister = ret.data[0].days;
+
 
         console.log(this.timeRegister);
         console.log(ret.data[0].days);

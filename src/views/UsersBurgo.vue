@@ -66,17 +66,20 @@
                       <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.entryDate" label="Data de Entrada" mask="##/##/####"></v-text-field>
+                      <v-text-field v-model="editedItem.entryDate" label="Data de Entrada"
+                                    mask="##/##/####"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.exitDate" label="Data de Saída" mask="##/##/####"></v-text-field>
+                      <v-text-field v-model="editedItem.exitDate" label="Data de Saída"
+                                    mask="##/##/####"></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
                       <v-text-field v-model="editedItem.cpf" label="CPF"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.birthday" label="Data de Nascimento" mask="##/##/####"></v-text-field>
+                      <v-text-field v-model="editedItem.birthday" label="Data de Nascimento"
+                                    mask="##/##/####"></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
@@ -274,44 +277,67 @@
 
       async save() {
         if (this.editedIndex > -1) {
-          Object.assign(this.users[this.editedIndex], this.editedItem);
-          // axios.put('https://localhost:1337/api/' + this.editedItem._id, this.editedItem)
-
-          console.log(this.editedItem.id);
-          // let ret = await AdminAPI.updateUser(this.editedItem);
-
           //NAO TA FUNCIONANTE
+          Object.assign(this.users[this.editedIndex], this.editedItem);
+          console.log(this.editedItem.id);
           let ret = await AdminAPI.updateUser(this.editedItem);
 
           console.log('update user', ret)
         } else {
+          let myDate = new Date();
 
+          let newUser = this.editedItem;
+
+          //formata data de string pra timeStamp
+          let day = newUser.birthday.slice(0, 2);
+          let month = newUser.birthday.slice(2, 4);
+          let year = newUser.birthday.slice(4, 8);
+          myDate.setFullYear(Number(year), month - 1, Number(day));
+          newUser.birthday = myDate.getTime();
+          console.log(newUser.birthday)
+
+          day = newUser.entryDate.slice(0, 2);
+          month = newUser.entryDate.slice(2, 4);
+          year = newUser.entryDate.slice(4, 8);
+          myDate.setFullYear(Number(year), month - 1, Number(day));
+          newUser.entryDate = myDate.getTime();
+          console.log(newUser.entryDate);
+
+          day = newUser.exitDate.slice(0, 2);
+          month = newUser.exitDate.slice(2, 4);
+          year = newUser.exitDate.slice(4, 8);
+          myDate.setFullYear(Number(year), month - 1, Number(day));
+          newUser.exitDate = myDate.getTime();
+          console.log(newUser.exitDate);
+
+          console.log('newUser', newUser);
+
+          // newUser.
 
           //nao ta funcionando! Nao ta convertendo direito pra timeStamp ainda. Talvez usar o splice pra dividir os dados
           //pra dia mes e ano e dps dar um set e um get seja mais facil
-          let newUser = [];
-          newUser = this.editedItem;
-          console.log('newUser', newUser)
-          let timeStampEntry = newUser.entryDate;
-          let timeStampExit = newUser.exitDate;
-          let timeStampBirthday = newUser.birthday;
 
-          let entry = new Date();
-          let exit = new Date();
-          let birthday = new Date();
-
-          entry.setTime(timeStampEntry)
-          exit.setDate(timeStampExit)
-          birthday.setDate(timeStampBirthday)
-
-          // newUser.entryDate = entry.getTime();
-          // newUser.entryDate = entry.getTime();
-          // newUser.entryDate = entry.getTime();
+          // console.log('newUser', newUser)
+          // let timeStampEntry = newUser.entryDate;
+          // let timeStampExit = newUser.exitDate;
+          // let timeStampBirthday = newUser.birthday;
           //
-
-          console.log(entry.getTime());
-
-          let ret = await AdminAPI.createUser(this.editedItem);
+          // let entry = new Date();
+          // let exit = new Date();
+          // let birthday = new Date();
+          //
+          // entry.setTime(timeStampEntry)
+          // exit.setDate(timeStampExit)
+          // birthday.setDate(timeStampBirthday)
+          //
+          // // newUser.entryDate = entry.getTime();
+          // // newUser.entryDate = entry.getTime();
+          // // newUser.entryDate = entry.getTime();
+          // //
+          //
+          // console.log(entry.getTime());
+          //
+          let ret = await AdminAPI.createUser(newUser);
           console.log('create user', ret);
         }
 

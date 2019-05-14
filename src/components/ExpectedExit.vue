@@ -51,6 +51,7 @@
   import {
     UserAPI,
   } from '../requests';
+
   import {
     AdminCDH,
   } from '../views/AdminCDH';
@@ -100,6 +101,7 @@
         console.log('expectedExit', ret);
 
         this.dialog = false;
+
 
       }
 
