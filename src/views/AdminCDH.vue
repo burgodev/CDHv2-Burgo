@@ -241,33 +241,25 @@
           let cdh = [];
           let myDate = new Date();
 
-          // for (let i = 0; i < ret.data[0].days.length; i++) {
-          //   //formata o horario e adiciona 0 caso necessário;
-          //   console.log('length', ret.data[0].days.length)
+          //percorre cada sessao dentro de cada dia
+          for (let i = 0; i < ret.data[0].days.length; i++) {
             for (let x = 0; x < ret.data[0].days[0].entryExit.length; x++) {
+              myDate.setTime(ret.data[0].days[0].entryExit[x].entry);
+              let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              myDate.setTime(ret.data[0].days[0].entryExit[x].exit);
+              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
 
-              console.log('teste')
-              console.log(ret.data[0].days[0].entryExit.length);
-              console.log(ret.data[0].days[0].entryExit[x]);
+              if (formatedExit == "NaN:NaN:NaN")
+                formatedExit = "";
 
-
-
-            myDate.setTime(ret.data[0].days[0].entryExit[x].entry);
-            let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-            myDate.setTime(ret.data[0].days[0].entryExit[x].exit);
-            let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-
-            if (formatedExit == "NaN:NaN:NaN")
-              formatedExit = "";
-
-            cdh.push({
-              day: ret.data[0].days[0].day,
-              entry: formatedEntry,
-              exit: formatedExit,
-              timeWorked: ret.data[0].days[0].timeWorked
-            });
+              cdh.push({
+                day: ret.data[0].days[0].day,
+                entry: formatedEntry,
+                exit: formatedExit,
+                timeWorked: ret.data[0].days[0].timeWorked
+              });
             }
-        //   }
+          }
           console.log('cdh', cdh)
           this.timeRegister = cdh;
         }

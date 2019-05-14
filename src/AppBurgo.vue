@@ -49,7 +49,7 @@
     </v-content>
 
 
-    <v-footer app fixed>
+    <v-footer app fixed >
       <span>&copy; 2019</span>
 
 
