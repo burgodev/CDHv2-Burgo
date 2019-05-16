@@ -57,37 +57,131 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.name" label="Nome"></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="Nome" prepend-icon="person"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.surname" label="Sobrenome"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md12>
-                      <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
+                      <v-text-field v-model="editedItem.surname" label="Sobrenome" prepend-icon="person"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.entryDate" label="Data de Entrada"
-                                    mask="##/##/####"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.exitDate" label="Data de Saída"
-                                    mask="##/##/####"></v-text-field>
+                      <v-text-field v-model="editedItem.email" label="Email" prepend-icon="email"></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.cpf" label="CPF"></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.birthday" label="Data de Nascimento"
-                                    mask="##/##/####"></v-text-field>
+                      <v-text-field v-model="editedItem.password" label="Senha"
+                                    prepend-icon="vpn_key"></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.password" label="Senha"></v-text-field>
+                      <v-text-field v-model="editedItem.cpf" label="CPF"
+                                    prepend-icon="credit_card" mask="###-###-###-##"
+                      ></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md6>
-                      <v-text-field v-model="editedItem.password" label="Repita a senha"></v-text-field>
+
+
+                    <v-flex xs3 sm3 md6>
+                      <template>
+                        <v-menu
+                          ref="menu3"
+                          v-model="menu3"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          lazy
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="editedItem.birthday"
+                              label="Data de Nascimento"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            color="primary"
+                            ref="picker"
+                            v-model="editedItem.birthday"
+                            :max="new Date().toISOString().substr(0, 10)"
+                            min="1980-01-01"
+                            @change="datePicker3"
+                          ></v-date-picker>
+                        </v-menu>
+                      </template>
                     </v-flex>
+
+
+                    <v-flex xs3 sm3 md6>
+                      <template>
+                        <v-menu
+                          ref="menu1"
+                          v-model="menu1"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          lazy
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="editedItem.entryDate"
+                              label="Data de Entrada"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            color="primary"
+                            ref="picker"
+                            v-model="editedItem.entryDate"
+                            :max="new Date().toISOString().substr(0, 10)"
+                            min="1980-01-01"
+                            @change="datePicker1"
+                          ></v-date-picker>
+                        </v-menu>
+                      </template>
+                    </v-flex>
+
+
+                    <v-flex xs3 sm3 md6>
+                      <template>
+                        <v-menu
+                          ref="menu2"
+                          v-model="menu2"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          lazy
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="editedItem.exitDate"
+                              label="Data de Saída"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            color="primary"
+                            ref="picker"
+                            v-model="editedItem.exitDate"
+                            :max="new Date().toISOString().substr(0, 10)"
+                            min="1980-01-01"
+                            @change="datePicker2"
+                          ></v-date-picker>
+                        </v-menu>
+                      </template>
+                    </v-flex>
+
 
                     <v-flex xs12 sm6 md4>
                       <v-switch color="primary" v-model="editedItem.isAdm" label="Admin" value="isAdm"></v-switch>
@@ -176,7 +270,10 @@
     components: {ChangePassword, JustifyAbsence},
 
     data: () => ({
-
+      date: null,
+      menu1: false,
+      menu2: false,
+      menu3: false,
       search: '',
       dialog: false,
       headers: [
@@ -198,27 +295,25 @@
       users: [],
       editedIndex: -1,
       editedItem: {
-        name: 'Filipe',
-        surname: 'Burgoteste',
-        email: 'filipeburgoteste@gmail.com',
-        cpf: '000000000',
+        name: '',
+        surname: '',
+        email: '',
+        cpf: '',
         entryDate: '',
         exitDate: '',
-        password: 'burgo',
+        password: '',
         birthday: '',
-        id: '312321312',
         isAdm: false
       },
       defaultItem: {
-        name: 'Filipe',
-        surname: 'Burgoteste',
-        email: 'filipeburgoteste',
-        cpf: '000000000',
+        name: '',
+        surname: '',
+        email: '',
+        cpf: '',
         entryDate: '',
         exitDate: '',
-        password: 'burgo',
+        password: '',
         birthday: '',
-        id: '2132132',
         isAdm: false
       }
     }),
@@ -230,6 +325,16 @@
     },
 
     watch: {
+      menu1(val) {
+        val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+      },
+      menu2(val) {
+        val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+      },
+      menu3(val) {
+        val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+      },
+
       dialog(val) {
         val || this.close()
       }
@@ -250,8 +355,12 @@
       },
 
       editItem(item) {
-        this.editedIndex = this.users.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedIndex = this.users.indexOf(item);
+        // this.editedItem = Object.assign({}, item);
+        this.editedItem = {
+          ...item
+        };
+
         this.dialog = true
       },
 
@@ -277,66 +386,39 @@
 
       async save() {
         if (this.editedIndex > -1) {
-          //NAO TA FUNCIONANTE
+          //update user => NAO TA FUNCIONANTE
           Object.assign(this.users[this.editedIndex], this.editedItem);
           console.log(this.editedItem.id);
           let ret = await AdminAPI.updateUser(this.editedItem);
 
           console.log('update user', ret)
         } else {
+          //new user =>
           let myDate = new Date();
+          let newUser = {
+            ...this.editedItem
+          };
 
-          let newUser = this.editedItem;
-
-          //formata data de string pra timeStamp
-          let day = newUser.birthday.slice(0, 2);
-          let month = newUser.birthday.slice(2, 4);
-          let year = newUser.birthday.slice(4, 8);
-          myDate.setFullYear(Number(year), month - 1, Number(day));
+          // //formata data de string pra timeStamp
+          let year = newUser.birthday.slice(0, 4);
+          let month = newUser.birthday.slice(5, 7);
+          let day = newUser.birthday.slice(8, 10);
+          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
           newUser.birthday = myDate.getTime();
-          console.log(newUser.birthday)
 
-          day = newUser.entryDate.slice(0, 2);
-          month = newUser.entryDate.slice(2, 4);
-          year = newUser.entryDate.slice(4, 8);
-          myDate.setFullYear(Number(year), month - 1, Number(day));
+          year = newUser.entryDate.slice(0, 4);
+          month = newUser.entryDate.slice(5, 7);
+          day = newUser.entryDate.slice(8, 10);
+          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
           newUser.entryDate = myDate.getTime();
-          console.log(newUser.entryDate);
 
-          day = newUser.exitDate.slice(0, 2);
-          month = newUser.exitDate.slice(2, 4);
-          year = newUser.exitDate.slice(4, 8);
-          myDate.setFullYear(Number(year), month - 1, Number(day));
+          year = newUser.exitDate.slice(0, 4);
+          month = newUser.exitDate.slice(5, 7);
+          day = newUser.exitDate.slice(8, 10);
+          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
           newUser.exitDate = myDate.getTime();
-          console.log(newUser.exitDate);
+          console.log('birthday', newUser.exitDate);
 
-          console.log('newUser', newUser);
-
-          // newUser.
-
-          //nao ta funcionando! Nao ta convertendo direito pra timeStamp ainda. Talvez usar o splice pra dividir os dados
-          //pra dia mes e ano e dps dar um set e um get seja mais facil
-
-          // console.log('newUser', newUser)
-          // let timeStampEntry = newUser.entryDate;
-          // let timeStampExit = newUser.exitDate;
-          // let timeStampBirthday = newUser.birthday;
-          //
-          // let entry = new Date();
-          // let exit = new Date();
-          // let birthday = new Date();
-          //
-          // entry.setTime(timeStampEntry)
-          // exit.setDate(timeStampExit)
-          // birthday.setDate(timeStampBirthday)
-          //
-          // // newUser.entryDate = entry.getTime();
-          // // newUser.entryDate = entry.getTime();
-          // // newUser.entryDate = entry.getTime();
-          // //
-          //
-          // console.log(entry.getTime());
-          //
           let ret = await AdminAPI.createUser(newUser);
           console.log('create user', ret);
         }
@@ -347,9 +429,20 @@
         this.initialize();
       },
 
+      datePicker1(date) {
+        this.$refs.menu1.save(date)
+      },
+
+      datePicker2(date) {
+        this.$refs.menu2.save(date)
+      },
+
+      datePicker3(date) {
+        this.$refs.menu3.save(date)
+      },
+
 
       showChangePassword() {
-
         this.$refs.changePassword.open({});
         this.close();
       }
