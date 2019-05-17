@@ -1,35 +1,43 @@
 <template>
   <div class="text-xs-center">
+
     <v-dialog
       persistent
       v-model="dialog"
       max-width="350"
     >
       <v-card>
-        <v-card-title class="headline" align-center justify-center> Previsão de Saída</v-card-title>
+        <v-layout align-center justify-start wrap>
+          <v-card-title class="headline"> Previsão de Saída</v-card-title>
+        </v-layout>
+        <v-divider
+          class="mx-8"
+        ></v-divider>
         <v-card-text>
-            <v-form
-              ref="form"
-              v-model="valid"
-              lazy-validation
-            >
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-time-picker
+              v-model="expectedExit"
+              type="month"
+              width="300"
+              class="mt-3"
+              color="primary"
+            ></v-time-picker>
+            <v-card></v-card>
+          </v-form>
+        </v-card-text>
 
-              <v-text-field
-                v-model="expectedExit"
-                label="Previsão de Saída"
-                required type="time"
-                solo
-
-                value="24hr hh:mm"
-                autofocus
-              ></v-text-field>
-
-            </v-form>
-
-          <v-card-actions>
-            <v-layout justify-end>
+        <v-divider
+          class="mx-6"
+        ></v-divider>
+        <v-spacer></v-spacer>
+        <v-card-actions>
+          <v-layout justify-end wrap>
             <v-btn
-              @click ="confirm"
+              @click="confirm"
               :disabled="!valid"
               round
               small
@@ -39,9 +47,8 @@
               Confirmar
             </v-btn>
 
-            </v-layout>
-          </v-card-actions>
-        </v-card-text>
+          </v-layout>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -69,23 +76,13 @@
     },
 
     methods: {
-      // validate () {
-      //   if (this.$refs.form.validate()) {
-      //     this.snackbar = true
-      //   }
-      // },
-      // reset () {
-      //   this.$refs.form.reset()
-      // },
-      // resetValidation () {
-      //   this.$refs.form.resetValidation()
-      // }
 
       open() {
-          this.dialog = true;
+        this.dialog = true;
       },
 
-      async confirm(){
+      async confirm() {
+        console.log('expectedexit', this.expectedExit);
         let id = await localStorage.getItem('id');
         let date = new Date();
         let hour = this.expectedExit.slice(0, this.expectedExit.indexOf(":"));

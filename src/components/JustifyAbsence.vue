@@ -6,7 +6,10 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title class="headline" align-center justify-center> Justificar Ausência</v-card-title>
+        <v-card-title class="headline"> Justificar Ausência</v-card-title>
+        <v-divider
+          class="mx-8"
+        ></v-divider>
 
         <v-card-text>
           <v-flex>
@@ -39,6 +42,8 @@
 
 
             </v-form>
+
+
           </v-flex>
           <v-card-actions>
             <v-spacer></v-spacer>

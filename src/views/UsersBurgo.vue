@@ -37,8 +37,31 @@
           ></v-divider>
 
 
-          <v-dialog persistent v-model="dialog" max-width="500px">
 
+
+
+
+
+
+          <v-icon
+            small
+            class="custom-btn"
+            @click="showCreateUser()"
+          >
+            edit
+          </v-icon>
+
+
+
+
+
+
+
+
+
+
+
+          <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
               <v-btn icon fab round class="custom-btn" v-on="on"
               >
@@ -51,6 +74,10 @@
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
+
+              <v-divider
+                class="mx-8"
+              ></v-divider>
 
 
               <v-card-text>
@@ -182,15 +209,17 @@
                       </template>
                     </v-flex>
 
-
                     <v-flex xs12 sm6 md4>
                       <v-switch color="primary" v-model="editedItem.isAdm" label="Admin" value="isAdm"></v-switch>
                     </v-flex>
+
                   </v-layout>
+                  <v-divider
+                    class="mx-8"
+                  ></v-divider>
                 </v-container>
 
                 <v-layout wrap>
-                  <v-btn @click="showChangePassword" round outline small text class="custom-btn">Alterar Senha</v-btn>
                   <v-layout justify-end>
                     <v-btn justify-end align-end class="custom-btn" round outline small @click="close">Cancelar</v-btn>
                     <v-btn justify-end align-end class="custom-btn" round outline small @click="save">Salvar</v-btn>
@@ -247,8 +276,8 @@
           <!--</template>-->
         </v-data-table>
 
-
         <ChangePassword ref="changePassword"/>
+        <CreateUser ref="createUser"/>
 
       </v-flex>
     </v-layout>
@@ -259,15 +288,15 @@
 <script>
   import JustifyAbsence from "../components/JustifyAbsence";
   import ChangePassword from "../components/ChangePassword";
-  import axios from 'axios';
+  import CreateUser from "../components/CreateUser";
+
   import {
     AdminAPI,
-
   } from '../requests';
 
   export default {
     name: "Users",
-    components: {ChangePassword, JustifyAbsence},
+    components: {ChangePassword, JustifyAbsence, CreateUser},
 
     data: () => ({
       date: null,
@@ -349,7 +378,7 @@
 
       async initialize() {
         let ret = await AdminAPI.readAllUsers();
-        console.log('initialize', ret);
+        console.log('readAllUsers', ret);
 
         this.users = ret.data;
       },
@@ -445,6 +474,11 @@
       showChangePassword() {
         this.$refs.changePassword.open({});
         this.close();
+      },
+
+      showCreateUser(){
+        this.$refs.createUser.open({});
+        this.close;
       }
     },
   }

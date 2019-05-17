@@ -2,7 +2,6 @@
   <v-container fluid fill-height>
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
-
         <v-toolbar flat>
           <v-toolbar-title class="primary--text">CDH</v-toolbar-title>
 
@@ -280,8 +279,8 @@
           };
           this.users.push(admin)
         }
-      }
-      ,
+      },
+
 
       selectedUser() {
 

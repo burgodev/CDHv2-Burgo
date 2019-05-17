@@ -14,7 +14,6 @@ export class userRequest {
     return this._config;
   }
 
-
   public async entry(userId: string, expectedExit: number) {
     try {
       let ret = await axios({
