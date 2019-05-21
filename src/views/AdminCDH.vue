@@ -18,7 +18,7 @@
               :items="users"
               item-text="name"
               item-value="id"
-              label="User"
+              label="Usuário"
               placeholder="Admin"
 
               @click="selectedUser"
@@ -30,7 +30,8 @@
           <v-flex xs6 sm6 md2 d-flex>
             <v-select
               :items="month"
-              label="Month"
+              v-model="selectedMonth"
+              label="Mês"
             ></v-select>
           </v-flex>
 
@@ -39,7 +40,8 @@
           <v-flex xs6 sm6 md2 d-flex>
             <v-select
               :items="year"
-              label="Year"
+              v-model="selectedYear"
+              label="Ano"
             ></v-select>
           </v-flex>
 
@@ -146,9 +148,10 @@
     components: {ExpectedExit, JustifyAbsence},
 
     data: () => ({
-      testOsv: true,
       selectUser: null,
       search: '',
+      selectedMonth: null,
+      selectedYear: null,
       selected: false,
       headers: [
 
@@ -180,11 +183,6 @@
       sessionButton() {
         if (this.selected) return 'primary';
       },
-
-      formTitle() {
-        return this.editedIndex === -1 ? 'Novo Usuário' : 'Editar Usuário'
-      }
-
     },
 
     methods: {
@@ -225,9 +223,21 @@
 
       async adminCdhSearch() {
         let date = new Date();
-        let month = date.getMonth();
-        let year = date.getFullYear();
+        let month, year;
         let id;
+
+        if (this.selectedMonth) {
+          month = this.getCdhMonths();
+        } else {
+          month = date.getMonth();
+        }
+
+        if (this.selectedYear) {
+          year = this.selectedYear
+        } else {
+          year = date.getFullYear();
+        }
+
 
         if (!this.selectUser) {
           id = localStorage.getItem('id');
@@ -239,8 +249,8 @@
         console.log('adminCdhConsult', ret);
 
         //Alimenta a table
+        let cdh = [];
         if (ret.data.length) {
-          let cdh = [];
           let myDate = new Date();
 
           //percorre cada sessao dentro de cada dia
@@ -262,11 +272,9 @@
               });
             }
           }
-          console.log('cdh', cdh)
-          this.timeRegister = cdh;
         }
-      }
-      ,
+        this.timeRegister = cdh;
+      },
 
       async getUser() {
         let ret = await AdminAPI.readAllUsers();
@@ -294,6 +302,37 @@
           this.year.push(year);
 
           year -= 1;
+        }
+      },
+
+      getCdhMonths() {
+
+        switch (this.selectedMonth) {
+          case 'Janeiro':
+            return 0;
+          case 'Fevereiro':
+            return 1;
+          case 'Março':
+            return 2;
+          case 'Abril':
+            return 3;
+          case 'Maio':
+            return 4;
+          case 'Junho':
+            return 5;
+          case 'Julho':
+            return 6;
+          case 'Agosto':
+            return 7;
+          case 'Setembro':
+            return 8;
+          case 'Outubro':
+            return 9;
+          case 'Novembro':
+            return 10;
+          case 'Dezembro':
+            return 11;
+
         }
       },
 

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from './views/Login.vue';
 import AdminCDH from './views/AdminCDH.vue';
-import UsersBurgo from './views/UsersBurgo.vue';
+import Users from './views/Users.vue';
 import UserCDH from './views/UserCDH.vue';
 Vue.use(Router);
 export default new Router({
@@ -14,7 +14,6 @@ export default new Router({
             name: 'login',
             component: Login
         },
-
         {
             path: '/AdminCDH',
             name: 'AdminCDH',
@@ -26,10 +25,9 @@ export default new Router({
             component: UserCDH
         },
         {
-            path: '/usersburgo',
-            name: 'UsersBurgo',
-            component: UsersBurgo
+            path: '/users',
+            name: 'Users',
+            component: Users
         },
-
     ]
 });

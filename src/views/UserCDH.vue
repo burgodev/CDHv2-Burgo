@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height >
+  <v-container fluid fill-height>
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
         <v-toolbar flat>
@@ -11,24 +11,40 @@
             vertical
           ></v-divider>
 
-
-          <v-layout justify-start space-around>
           <v-flex xs6 sm6 md4 d-flex>
             <v-select
-              :items="items"
-              label="Month"
+              v-model="selectUser"
+              :items="user"
+              item-text="name"
+              item-value="id"
+              label="Usuário"
+              disabled
+
+              @input="selectedUser"
             ></v-select>
           </v-flex>
 
-          <v-flex md1></v-flex>
+          <v-spacer></v-spacer>
 
-          <v-flex xs6 sm6 md4 d-flex>
+          <v-flex xs6 sm6 md2 d-flex>
             <v-select
-              :items="items"
-              label="Year"
+              v-model="selectedMonth"
+              :items="month"
+              label="Mês"
+
+              @input="selectedUser"
             ></v-select>
           </v-flex>
-          </v-layout>
+
+          <v-spacer></v-spacer>
+
+          <v-flex xs6 sm6 md2 d-flex>
+            <v-select
+              v-model="selectedYear"
+              :items="year"
+              label="Ano"
+            ></v-select>
+          </v-flex>
 
 
           <v-spacer></v-spacer>
@@ -49,16 +65,11 @@
               ></v-divider>
 
 
-              <!--<v-layout wrap>-->
-              <!--<v-btn round outline small class="custom-btn" v-on="on">-->
-              <!--<v-icon class="custom-btn" >power_settings_new</v-icon>-->
-              <!--</v-btn>-->
-              <!--</v-layout>-->
-
               <v-layout wrap>
-                <v-tooltip  color="primary" bottom>
+                <v-tooltip color="primary" bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn  round outline small :color="sessionButton" class="custom-btn" @click="sessionControl" v-on="on">
+                    <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
+                           v-on="on">
                       <v-icon class="custom-btn">power_settings_new</v-icon>
                     </v-btn>
                   </template>
@@ -66,13 +77,6 @@
                 </v-tooltip>
               </v-layout>
 
-              <!--<v-btn v-on:click="logout" class="custom-btn" icon round >-->
-              <!--<v-icon class="custom-btn" color="white" >logout</v-icon>-->
-              <!--</v-btn>-->
-
-              <!--<v-btn icon  round class="custom-btn" v-on="beginSession">-->
-              <!--<v-icon class="custom-btn" dark>power_settings_new</v-icon>-->
-              <!--</v-btn>-->
             </v-layout>
           </v-flex>
 
@@ -82,7 +86,6 @@
         <v-data-table
           :headers="headers"
           :items="timeRegister"
-          :search="search"
           class="elevation-1"
 
         >
@@ -98,7 +101,7 @@
                 class="custom-btn"
                 @click="showJustifyAbsence(props.item)"
               >
-                edit
+                search
               </v-icon>
             </td>
           </template>
@@ -108,7 +111,6 @@
               Your search for "{{ search }}" found no results.
             </v-alert>
           </template>
-
         </v-data-table>
 
         <JustifyAbsence ref="JustifyAbsence"/>
@@ -117,26 +119,31 @@
       </v-flex>
     </v-layout>
   </v-container>
-
 </template>
 
 <script>
   import JustifyAbsence from "../components/JustifyAbsence";
   import ExpectedExit from "../components/ExpectedExit";
   import {
-    UserAPI,
+    UserAPI
   } from '../requests';
 
 
-
+  function addZero(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
 
   export default {
     name: "UserCDH",
     components: {ExpectedExit, JustifyAbsence},
 
     data: () => ({
-      testOsv: true,
-      search: '',
+      selectUser: '',
+      selectedMonth: null,
+      selectedYear: null,
       selected: false,
       headers: [
 
@@ -149,34 +156,35 @@
 
       ],
       timeRegister: [],
-      items: []
+      user: [],
+      month: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      year: []
 
     }),
 
 
     mounted() {
       this.initialize()
-
     },
 
 
     computed: {
-      sessionButton(){
-        if(this.selected) return'primary';
+      sessionButton() {
+        if (this.selected) return 'primary';
       },
-
-      formTitle() {
-        return this.editedIndex === -1 ? 'Novo Usuário' : 'Editar Usuário'
-      }
-
     },
 
     methods: {
       async initialize() {
-
         this.userCdhSearch();
+        this.getUser();
+        this.getCdhYears();
+        this.selectUser = localStorage.getItem('name');
 
-
+        if (localStorage.getItem('sessionOpen') == "true") {
+          this.selected = true;
+        }
       },
 
 
@@ -188,42 +196,125 @@
         this.selected = !this.selected;
         let id = await localStorage.getItem('id');
 
-        if (this.selected){
-          this.$refs.ExpectedExit.open({});
-        }
-        else {
+        if (this.selected) {
+          this.$refs.ExpectedExit.open(this.initialize.bind(this));
+          localStorage.setItem("sessionOpen", "true");
+        } else {
           let ret = await UserAPI.exit(id);
+          localStorage.setItem("sessionOpen", "false");
           console.log('exit', ret);
-
-          this.cdhSearch();
         }
+
+        // this.initialize();
       },
 
-      async userCdhSearch(){
+      async userCdhSearch() {
         let date = new Date();
-        let month = date.getMonth();
-        let year = date.getFullYear();
-        let id = localStorage.getItem('id');
+        let month, year;
 
+        if (this.selectedMonth) {
+          month = this.getCdhMonths();
+        } else {
+          month = date.getMonth();
+        }
+
+        if (this.selectedYear) {
+          year = this.selectedYear
+        } else {
+          year = date.getFullYear();
+        }
+
+        let id = localStorage.getItem('id');
         let ret = await UserAPI.userCdhConsult(id, month, year);
         console.log('userCdhConsult', ret);
 
+        //Alimenta a table
+        let cdh = [];
+        if (ret.data.length) {
+          let myDate = new Date();
 
-        //não ta alimentando a tabela da maneira corret ainda(falta o entry e exit).
-        this.timeRegister = ret.data[0].days;
+          //percorre cada sessao dentro de cada dia
+          for (let i = 0; i < ret.data[0].days.length; i++) {
+            for (let x = 0; x < ret.data[0].days[0].entryExit.length; x++) {
+              myDate.setTime(ret.data[0].days[0].entryExit[x].entry);
+              let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              myDate.setTime(ret.data[0].days[0].entryExit[x].exit);
+              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
 
-        console.log(this.timeRegister);
-        console.log(ret.data[0].days);
+              if (formatedExit == "NaN:NaN:NaN")
+                formatedExit = "";
 
-        // this.timeRegister.day = ret.data[0].days;
-        // this.timeRegister.timeWorked = ret.data[0].days.timeWorked;
-        // this.timeRegister.entry = ret.data[0].days.entryExit[0];
-        //
-        // console.log(this.timeRegister);
-        // console.log(ret.data[0].days);
-      }
+              cdh.push({
+                day: ret.data[0].days[0].day,
+                entry: formatedEntry,
+                exit: formatedExit,
+                timeWorked: ret.data[0].days[0].timeWorked
+              });
+            }
+          }
+        }
+        this.timeRegister = cdh;
+      },
+
+      getUser() {
+        let user = [];
+        user.push(localStorage.getItem('name'));
+
+        this.user = user;
+
+      },
+
+      getCdhYears() {
+        let myDate = new Date();
+        let year = myDate.getFullYear();
+
+        for (let i = 0; i < 5; i++) {
+          this.year.push(year);
+
+          year -= 1;
+        }
+      },
+
+      getCdhMonths() {
+
+        switch (this.selectedMonth) {
+          case 'Janeiro':
+            return 0;
+          case 'Fevereiro':
+            return 1;
+          case 'Março':
+            return 2;
+          case 'Abril':
+            return 3;
+          case 'Maio':
+            return 4;
+          case 'Junho':
+            return 5;
+          case 'Julho':
+            return 6;
+          case 'Agosto':
+            return 7;
+          case 'Setembro':
+            return 8;
+          case 'Outubro':
+            return 9;
+          case 'Novembro':
+            return 10;
+          case 'Dezembro':
+            return 11;
+
+        }
+      },
+
+
+      selectedUser() {
+
+
+      },
+
     }
   }
+
 </script>
 
 <style scoped>

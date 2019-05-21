@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import './plugins/vuetify';
-import App2 from './AppBurgo.vue';
+import App2 from './App.vue';
 import router from './router';
 import store from './store';
 import Vuetify from 'vuetify';

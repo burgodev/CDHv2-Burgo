@@ -171,7 +171,7 @@
   import {
     AdminAPI,
   } from '../requests';
-  import UsersBurgo from "../views/UsersBurgo";
+  import UsersBurgo from "../views/Users";
 
 
   export default {

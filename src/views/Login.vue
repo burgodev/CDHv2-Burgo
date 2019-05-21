@@ -52,9 +52,6 @@
         OpenAPI,
     } from '../requests';
 
-
-
-
     @Component({
         components: {},
     })
@@ -71,7 +68,6 @@
         },
 
         methods: {
-
             async login() {
                 let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
 
@@ -80,67 +76,19 @@
                     localStorage.setItem('accessKey', ret.data.accessKey);
                     localStorage.setItem('id', ret.data.id);
                     localStorage.setItem('name', ret.data.name)
+                    localStorage.setItem('isLogged', 'true');
+                    console.log(localStorage.getItem('isLogged'));
 
-
-                    this.$router.replace('/AdminCDH')
-
-
-
-                    // this.$refs.AppBurgo.showCdh();
-
-
-
-
-                    //
-                    // let AppBurgo = new AppBurgo();
-                    //
-                    // AppBurgo.showCdh();
-
-
+                    this.$router.replace('/UserCDH')
                 }
-
-
-                // try {
-                // let ret = await axios.post('http://localhost:1337/api/login', this.user);
-                //
-                // if (ret.data.success) {
-                //   localStorage.setItem('authenticationKey', ret.data.data.authenticationKey);
-                //   localStorage.setItem('accessKey', ret.data.data.accessKey);
-                //   localStorage.setItem('accessKey', ret.data.data.id);
-                //
-                //   } else
-                //     alert(ret.data.data.description);
-                //
-                //   // console.log('retornou isso', ret);
-                //
-                //
-                // } catch (e) {
-                //   console.error('erro no login', e);
-                // }
-
-
             },
         }
     }
-
-
 </script>
 
 <style>
 
-    /*.custom-btn::before {*/
-    /*color: transparent*/
-    /*}*/
 
-
-    /*.timeRegister-color {*/
-    /*background-image: radial-gradient(#444e54, #0b0b0b)*/
-    /*}*/
-
-
-    /*.login-card {*/
-    /*style="background-color: rgba(244,248,255,0.8)"*/
-    /*}*/
 
 
 </style>

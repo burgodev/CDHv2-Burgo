@@ -72,13 +72,15 @@
         dialog: false,
         valid: true,
         expectedExit: '',
+        funcaoDoPai: null,
       }
     },
 
     methods: {
 
-      open() {
+      open(fn) {
         this.dialog = true;
+        this.funcaoDoPai = fn;
       },
 
       async confirm() {
@@ -95,13 +97,9 @@
 
         let ret = await UserAPI.entry(id, expectedExit);
         console.log('expectedExit', ret);
-
+        this.funcaoDoPai();
         this.dialog = false;
-
-
       }
-
-
     }
   }
 </script>
