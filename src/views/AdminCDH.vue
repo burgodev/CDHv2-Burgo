@@ -162,7 +162,8 @@
       ],
       timeRegister: [],
       users: [],
-      month: [],
+      month: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
       year: []
 
     }),
@@ -190,6 +191,8 @@
       async initialize() {
         this.adminCdhSearch();
         this.getUser();
+        this.getCdhYears();
+
 
         if (localStorage.getItem('sessionOpen') == "true") {
           this.selected = true;
@@ -281,11 +284,24 @@
         }
       },
 
+      async getCdhYears() {
+        let myDate = new Date();
+        let year = myDate.getFullYear();
+
+
+
+        for (let i = 0; i < 5; i++){
+          this.year.push(year);
+
+          year -= 1;
+        }
+      },
+
 
       selectedUser() {
 
 
-      }
+      },
 
     }
   }

@@ -18,7 +18,6 @@
                       :items="items"
                       label="User"
             ></v-select>
-            <h1 v-else> eu sou um usuario logado</h1>
           </v-flex>
 
           <v-spacer></v-spacer>

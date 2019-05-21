@@ -71,6 +71,7 @@
   })
 
   export default {
+    name: 'AppBurgo',
     data: () => ({
       selectedButtonColorCdh: false,
       selectedButtonColorUser: false

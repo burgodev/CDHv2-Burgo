@@ -82,7 +82,6 @@
       },
 
       async confirm() {
-        console.log('expectedexit', this.expectedExit);
         let id = await localStorage.getItem('id');
         let date = new Date();
         let hour = this.expectedExit.slice(0, this.expectedExit.indexOf(":"));

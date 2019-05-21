@@ -29,36 +29,19 @@
             ></v-divider>
           </v-layout>
 
-
           <v-divider
             class="mx-4"
             inset
             vertical
           ></v-divider>
 
-
-
-
-
-
-
-
           <v-icon
             small
             class="custom-btn"
-            @click="showCreateUser()"
+            @click="showCreateUser"
           >
             edit
           </v-icon>
-
-
-
-
-
-
-
-
-
 
 
           <v-dialog persistent v-model="dialog" max-width="500px">
@@ -237,6 +220,7 @@
           :items="users"
           :search="search"
           class="elevation-1"
+          v-on:initializetable="initialize"
 
 
         >
@@ -276,27 +260,26 @@
           <!--</template>-->
         </v-data-table>
 
-        <ChangePassword ref="changePassword"/>
-        <CreateUser ref="createUser"/>
-
+        <ChangePassword ref="ChangePassword"/>
+        <CreateUser ref="CreateUser"/>
+        <EditUser ref="EditUser"/>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
-
 <script>
-  import JustifyAbsence from "../components/JustifyAbsence";
   import ChangePassword from "../components/ChangePassword";
   import CreateUser from "../components/CreateUser";
-
   import {
     AdminAPI,
   } from '../requests';
+  import EditUser from "../components/EditUser";
+
 
   export default {
-    name: "Users",
-    components: {ChangePassword, JustifyAbsence, CreateUser},
+    name: "UsersBurgo",
+    components: {EditUser, ChangePassword, CreateUser},
 
     data: () => ({
       date: null,
@@ -383,9 +366,12 @@
         this.users = ret.data;
       },
 
+      showJustifyAbsence() {
+        this.$refs.JustifyAbsence.open({})
+      },
+
       editItem(item) {
         this.editedIndex = this.users.indexOf(item);
-        // this.editedItem = Object.assign({}, item);
         this.editedItem = {
           ...item
         };
@@ -472,14 +458,22 @@
 
 
       showChangePassword() {
-        this.$refs.changePassword.open({});
+        this.$refs.ChangePassword.open({});
         this.close();
       },
 
-      showCreateUser(){
-        this.$refs.createUser.open({});
+      showCreateUser() {
+        this.$refs.CreateUser.open({});
+
+        this.initialize();
+      },
+
+      showEditUser() {
+        this.$refs.EditUser.open({});
         this.close;
-      }
+      },
+
+
     },
   }
 </script>

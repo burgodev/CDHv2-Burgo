@@ -52,8 +52,6 @@ export default new Router({
       name: 'UsersBurgo',
       component: UsersBurgo
     },
-
-
     {
       path: '/about',
       name: 'about',

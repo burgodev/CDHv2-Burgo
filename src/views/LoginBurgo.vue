@@ -41,6 +41,8 @@
 
       </v-flex>
     </v-layout>
+
+
   </v-container>
 </template>
 
@@ -49,7 +51,9 @@
   import {
     OpenAPI,
   } from '../requests';
-  import AppBurgo from "@/AppBurgo.vue";
+
+
+
 
   @Component({
     components: {},
@@ -77,7 +81,16 @@
           localStorage.setItem('id', ret.data.id);
           localStorage.setItem('name', ret.data.name)
 
+
           this.$router.replace('/AdminCDH')
+
+
+
+          // this.$refs.AppBurgo.showCdh();
+
+
+
+
           //
           // let AppBurgo = new AppBurgo();
           //

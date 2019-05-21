@@ -168,16 +168,10 @@
 </template>
 
 <script>
-  import {
-    AdminAPI,
-  } from '../requests';
-  import UsersBurgo from "../views/UsersBurgo";
-
-
   export default {
-    name: "CreateUser",
-    component:{UsersBurgo},
+    name: "EditUser",
 
+    comments: {},
     data: () => ({
       date: null,
       menu1: false,
@@ -251,9 +245,7 @@
 
 
         this.close();
-        this.$emit('initializetable');
-
-        // this.$refs.Users.initialize();
+        this.$refs.Users.initialize();
       },
 
       datePicker1(date) {
