@@ -107,6 +107,11 @@
 
       },
 
+      isAdm(){
+
+
+      },
+
       showUsers() {
         this.$router.replace('/users')
         this.selectedButtonColorUser = !this.selectedButtonColorUser;
@@ -123,7 +128,6 @@
       changeColor() {
 
       }
-
     }
   }
 

@@ -3,57 +3,34 @@
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
         <v-toolbar flat>
-          <v-toolbar-title class="primary--text">CDH</v-toolbar-title>
-
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
-
-          <v-flex xs6 sm6 md4 d-flex>
-            <v-select
-              v-model="selectUser"
-              :items="user"
-              item-text="name"
-              item-value="id"
-              label="Usuário"
-              disabled
-
-              @input="selectedUser"
-            ></v-select>
-          </v-flex>
+          <v-icon class="custom-btn mr-3 grey--text">access_time</v-icon>
+          <h3 class="custom-btn font-weight-light.font-italic mr-2 grey--text "> {{selectUser}} </h3>
+          <h3 class="custom-btn font-weight-light.font-italic grey--text"> - {{workTimeLeft}} horas restantes </h3>
 
           <v-spacer></v-spacer>
 
-          <v-flex xs6 sm6 md2 d-flex>
+          <v-flex md2 mr-2 >
             <v-select
               v-model="selectedMonth"
               :items="month"
-              label="Mês"
-
-              @input="selectedUser"
+              placeholder="Mês"
             ></v-select>
           </v-flex>
 
-          <v-spacer></v-spacer>
-
-          <v-flex xs6 sm6 md2 d-flex>
+          <v-flex md1>
             <v-select
+              class="custom-btn"
               v-model="selectedYear"
               :items="year"
-              label="Ano"
+              placeholder="Ano"
             ></v-select>
           </v-flex>
-
-
-          <v-spacer></v-spacer>
 
           <v-flex xs2 sm2 md2 d-flex>
             <v-layout justify-end align-center>
               <v-layout justify-end>
 
-                <v-btn class="custom-btn" icon fab round @click="userCdhSearch">
+                <v-btn class="custom-btn grey--text" icon fab round @click="userCdhSearch">
                   <v-icon class="custom-btn">search</v-icon>
                 </v-btn>
 
@@ -145,6 +122,7 @@
       selectedMonth: null,
       selectedYear: null,
       selected: false,
+      workTimeLeft: 20,
       headers: [
 
         {text: 'Dia', value: 'day', align: 'center'},
@@ -180,7 +158,9 @@
         this.userCdhSearch();
         this.getUser();
         this.getCdhYears();
+
         this.selectUser = localStorage.getItem('name');
+        console.log(this.selectUser);
 
         if (localStorage.getItem('sessionOpen') == "true") {
           this.selected = true;
@@ -189,7 +169,7 @@
 
 
       showJustifyAbsence() {
-        this.$refs.JustifyAbsence.open({})
+        this.$refs.JustifyAbsence.open()
       },
 
       async sessionControl() {
@@ -205,7 +185,7 @@
           console.log('exit', ret);
         }
 
-        // this.initialize();
+        this.initialize();
       },
 
       async userCdhSearch() {
@@ -227,6 +207,18 @@
         let id = localStorage.getItem('id');
         let ret = await UserAPI.userCdhConsult(id, month, year);
         console.log('userCdhConsult', ret);
+
+        let workTimeLeft = new Date();
+
+
+        if (ret.data.length!=0) {
+          workTimeLeft.setTime(ret.data[0].workTimeLeft);
+
+        } else {
+          workTimeLeft.setHours(20);
+
+        }
+
 
         //Alimenta a table
         let cdh = [];
@@ -306,11 +298,6 @@
         }
       },
 
-
-      selectedUser() {
-
-
-      },
 
     }
   }

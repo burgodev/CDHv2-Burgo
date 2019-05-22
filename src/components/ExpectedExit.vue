@@ -7,8 +7,8 @@
       max-width="350"
     >
       <v-card>
+        <v-card-title class="headline"> Previsão de Saída</v-card-title>
         <v-layout align-center justify-start wrap>
-          <v-card-title class="headline"> Previsão de Saída</v-card-title>
         </v-layout>
         <v-divider
           class="mx-8"
@@ -25,6 +25,7 @@
               width="300"
               class="mt-3"
               color="primary"
+              format="24hr"
             ></v-time-picker>
             <v-card></v-card>
           </v-form>
@@ -34,7 +35,7 @@
           class="mx-6"
         ></v-divider>
         <v-spacer></v-spacer>
-        <v-card-actions>
+        <v-card-actions >
           <v-layout justify-end wrap>
             <v-btn
               @click="confirm"
@@ -51,28 +52,30 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <SessionConfirmation ref="SessionConfirmation"/>
+    <ChangePassword ref="ChangePassword"/>
+
   </div>
 </template>
 
 <script>
-  import {
-    UserAPI,
-  } from '../requests';
+  import {UserAPI} from '../requests';
+  import SessionConfirmation from "./SessionConfirmation";
+  import ChangePassword from "./ChangePassword";
 
-  import {
-    AdminCDH,
-  } from '../views/AdminCDH';
 
 
   export default {
     name: "ExpectedExit",
+    components: {SessionConfirmation, ChangePassword},
 
     data() {
       return {
         dialog: false,
         valid: true,
         expectedExit: '',
-        funcaoDoPai: null,
+        updateTable: null,
       }
     },
 
@@ -80,7 +83,7 @@
 
       open(fn) {
         this.dialog = true;
-        this.funcaoDoPai = fn;
+        this.updateTable = fn;
       },
 
       async confirm() {
@@ -97,7 +100,11 @@
 
         let ret = await UserAPI.entry(id, expectedExit);
         console.log('expectedExit', ret);
-        this.funcaoDoPai();
+
+
+        this.$refs.SessionConfirmation.open();
+
+        this.updateTable();
         this.dialog = false;
       }
     }

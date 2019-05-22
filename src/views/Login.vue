@@ -70,6 +70,7 @@
         methods: {
             async login() {
                 let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
+                console.log('login', ret)
 
                 if (ret.success) {
                     localStorage.setItem('authenticationKey', ret.data.authenticationKey);
