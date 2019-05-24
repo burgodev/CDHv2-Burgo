@@ -19,13 +19,6 @@
               lazy-validation
             >
 
-              <v-select
-                v-model="select"
-                :rules="[v => !!v || 'Item is required']"
-                label="Usuário"
-                required
-              ></v-select>
-
               <v-text-field
                 v-model="hours"
                 :rules="hoursRules"
@@ -87,20 +80,13 @@
 
     data() {
       return {
-
         dialog: false,
-
         valid: true,
-        Users: [
-          'User 1',
-          'User 2',
-          'User 3',
-          'User 4'
-        ],
+        user:'',
         hours: '',
         hoursRules: [
           v => !!v || 'Hours is required',
-          v => (v && v.length <= 2) || 'Hours must be less than 2 characters'
+          v => (v && v.length <= 3) || 'Hours must be less than 3 characters'
         ],
         justification: '',
         justificationRules: [
@@ -125,10 +111,15 @@
       // }
 
      async confirm() {
+       let myDate = new Date();
+       myDate.setHours(this.hours);
+
+
         let ret = await AdminApi.justifyAbsence(data);
+        console.log('JustifyAbsence', ret)
       },
 
-      open() {
+      open(data) {
         this.dialog = true;
       },
 

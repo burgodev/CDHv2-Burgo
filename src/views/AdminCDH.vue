@@ -3,7 +3,15 @@
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
         <v-toolbar flat>
-          <v-toolbar-title class="primary--text">CDH</v-toolbar-title>
+          <v-toolbar-title
+            class="primary--text"
+            margin-left="10px">
+            <v-icon
+              class="custom-btn primary--text">
+              access_time
+            </v-icon>
+            CDH
+          </v-toolbar-title>
 
           <v-divider
             class="mx-4"
@@ -202,8 +210,10 @@
       },
 
 
-      showJustifyAbsence() {
-        this.$refs.JustifyAbsence.open({})
+      showJustifyAbsence(justifyData) {
+
+
+        this.$refs.JustifyAbsence.open(data)
       },
 
       async sessionControl() {

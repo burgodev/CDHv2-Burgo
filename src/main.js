@@ -7,8 +7,9 @@ import Vuetify from 'vuetify';
 Vue.config.productionTip = false;
 Vue.use(Vuetify, {
     theme: {
-        primary: '#3abcb1',
-        secondary: '#b8a370',
+        // primary: '#3abcb1',
+        primary: '#f8b91b',
+        secondary: '#f8b91b',
         // secondary: '#b8a370',
         accent: '#82B1FF',
         error: '#ffda00',

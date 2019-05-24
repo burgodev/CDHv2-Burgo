@@ -2,9 +2,17 @@
   <v-container fluid fill-height>
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
+        <v-toolbar flat class="light">
+          <v-toolbar-title
+            class="primary--text"
+            margin-left="10px">
+            <v-icon
+              class="custom-btn primary--text">
+              person
+            </v-icon>
+            Usuários
+          </v-toolbar-title>
 
-        <v-toolbar flat class="dark">
-          <v-toolbar-title class="primary--text">Usuários</v-toolbar-title>
 
           <v-divider
             class="mx-4"
@@ -221,6 +229,7 @@
           :search="search"
           class="elevation-1"
           v-on:initializetable="initialize"
+          dark
 
 
         >

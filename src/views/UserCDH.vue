@@ -3,26 +3,47 @@
     <v-layout wrap justify-center align-start>
       <v-flex xs10 sm10 md10>
         <v-toolbar flat>
-          <v-icon class="custom-btn mr-3 grey--text">access_time</v-icon>
-          <h3 class="custom-btn font-weight-light.font-italic mr-2 grey--text "> {{selectUser}} </h3>
+
+          <v-toolbar-title
+            class="primary--text"
+            margin-left="10px">
+            <v-icon
+              class="custom-btn primary--text">
+              access_time
+            </v-icon>
+            CDH
+          </v-toolbar-title>
+
+          <v-divider
+            class="mx-4 primary"
+            inset
+            vertical
+
+          ></v-divider>
+
+          <h3 class="custom-btn font-weight-light.font-italic mr-2 grey--text"> {{selectUser}} </h3>
           <h3 class="custom-btn font-weight-light.font-italic grey--text"> - {{workTimeLeft}} horas restantes </h3>
 
           <v-spacer></v-spacer>
 
-          <v-flex md2 mr-2 >
+          <v-flex md2 mr-2>
             <v-select
               v-model="selectedMonth"
               :items="month"
               placeholder="Mês"
+              class="custom-btn "
+              dark
+
             ></v-select>
           </v-flex>
 
           <v-flex md1>
             <v-select
-              class="custom-btn"
+              class="custom-btn primary--text"
               v-model="selectedYear"
               :items="year"
               placeholder="Ano"
+              dark
             ></v-select>
           </v-flex>
 
@@ -30,13 +51,13 @@
             <v-layout justify-end align-center>
               <v-layout justify-end>
 
-                <v-btn class="custom-btn grey--text" icon fab round @click="userCdhSearch">
+                <v-btn class="custom-btn primary--text" icon fab round @click="userCdhSearch">
                   <v-icon class="custom-btn">search</v-icon>
                 </v-btn>
 
               </v-layout>
               <v-divider
-                class="mx-1"
+                class="mr-2 primary"
                 vertical
                 inset
               ></v-divider>
@@ -50,7 +71,7 @@
                       <v-icon class="custom-btn">power_settings_new</v-icon>
                     </v-btn>
                   </template>
-                  <span> Iniciar/Finalizar Sessão </span>
+                  <span class="black--text"> Iniciar/Finalizar Sessão </span>
                 </v-tooltip>
               </v-layout>
 
@@ -64,6 +85,7 @@
           :headers="headers"
           :items="timeRegister"
           class="elevation-1"
+          dark
 
         >
           <template v-slot:items="props">
@@ -211,11 +233,11 @@
         let workTimeLeft = new Date();
 
 
-        if (ret.data.length!=0) {
+        if (ret.data.length != 0) {
           workTimeLeft.setTime(ret.data[0].workTimeLeft);
 
         } else {
-          workTimeLeft.setHours(20);
+          workTimeLeft.setHours(80);
 
         }
 

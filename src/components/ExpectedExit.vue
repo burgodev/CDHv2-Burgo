@@ -5,15 +5,18 @@
       persistent
       v-model="dialog"
       max-width="350"
+
     >
       <v-card>
-        <v-card-title class="headline"> Previsão de Saída</v-card-title>
+        <v-card-title class="headline primary--text "> Previsão de Saída</v-card-title>
         <v-layout align-center justify-start wrap>
         </v-layout>
+
         <v-divider
-          class="mx-8"
+          class="primary"
         ></v-divider>
-        <v-card-text>
+
+        <v-card-text >
           <v-form
             ref="form"
             v-model="valid"
@@ -23,8 +26,7 @@
               v-model="expectedExit"
               type="month"
               width="300"
-              class="mt-3"
-              color="primary"
+              class="mt-3 primary--text primary"
               format="24hr"
             ></v-time-picker>
             <v-card></v-card>
@@ -32,8 +34,10 @@
         </v-card-text>
 
         <v-divider
-          class="mx-6"
+          class="primary mt-2"
         ></v-divider>
+
+
         <v-spacer></v-spacer>
         <v-card-actions >
           <v-layout justify-end wrap>
@@ -43,7 +47,7 @@
               round
               small
               outline
-              class="custom-btn"
+              class="custom-btn mt-2 mb-2"
             >
               Confirmar
             </v-btn>
@@ -80,7 +84,6 @@
     },
 
     methods: {
-
       open(fn) {
         this.dialog = true;
         this.updateTable = fn;

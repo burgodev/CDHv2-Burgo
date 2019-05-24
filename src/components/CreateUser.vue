@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title>
-        <span class="headline"> Novo Usuário </span>
+        <span class="headline primary--text" > Novo Usuário </span>
       </v-card-title>
 
       <v-divider
@@ -225,6 +225,7 @@
         let newUser = {
           ...this.user
         };
+
 
         // //formata data de string pra timeStamp
         let year = newUser.birthday.slice(0, 4);

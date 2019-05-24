@@ -7,13 +7,19 @@
     >
       <v-card>
         <v-card-title
-          class="headline secondary "
+          class="headline primary--text"
           primary-title
         >
           FALA DEV!
         </v-card-title>
 
-        <v-card-text>
+        <v-divider
+          class="mx-1"
+
+
+        ></v-divider>
+
+        <v-card-text class="primary--text" >
           Sua sessão começou... Bom trabalho e vê se faz um código limpinho pra gente entender depois né!
           <br/>
           <br/>

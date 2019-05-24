@@ -1,30 +1,30 @@
 <template>
-  <v-app id="app2" dark>
+  <v-app id="app2" dark >
 
-    <v-toolbar app fixed clipped-left v-if="isLogged">
+    <v-toolbar app fixed clipped-left v-if="isLogged" dark>
       <v-btn round small text class="custom-btn"></v-btn>
       <v-btn round small text class="custom-btn"></v-btn>
 
       <v-spacer/>
-      <v-toolbar-title class="white--text">Controle de Horário</v-toolbar-title>
+      <v-toolbar-title class="primary--text">Controle de Horário</v-toolbar-title>
       <v-spacer/>
 
       <v-tooltip color="primary" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn :color="selectedButtonCdh" v-on:click="showCdh" v-on="on" round outline small class="custom-btn">
+          <v-btn :color="selectedButtonCdh" v-on:click="showCdh" v-on="on" round outline small class="custom-btn ">
             <v-icon class="custom-btn">view_list</v-icon>
           </v-btn>
         </template>
-        <span> CDH </span>
+        <span class="black--text"> CDH </span>
       </v-tooltip>
 
       <v-tooltip color="primary" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn :color="selectedButtonUser" v-on:click="showUsers" v-on="on" round outline small text class="custom-btn">
+          <v-btn :color="selectedButtonUser" v-on:click="showUsers" v-on="on" round outline small class="custom-btn ">
             <v-icon class="custom-btn">people</v-icon>
           </v-btn>
         </template>
-        <span> Usuários </span>
+        <span class="black--text"> Usuários </span>
       </v-tooltip>
 
       <!--<v-btn v-on:click="logout" class="custom-btn" outline  round small text>-->
@@ -34,11 +34,11 @@
 
       <v-tooltip color="primary" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn v-on:click="logout" v-on="on" class="custom-btn" outline round small text>
+          <v-btn v-on:click="logout" v-on="on" round outline small class="custom-btn">
             <v-icon class="custom-btn">logout</v-icon>
           </v-btn>
         </template>
-        <span> Sair </span>
+        <span class="black--text"> Sair </span>
       </v-tooltip>
 
     </v-toolbar>
@@ -49,7 +49,7 @@
     </v-content>
 
 
-    <v-footer app fixed >
+    <v-footer app fixed dark >
       <span>&copy; 2019</span>
 
 
@@ -156,32 +156,19 @@
   }
 
   /*!*333333*!*/
-  .timeRegister-color {
-    background-image: radial-gradient(#535353, #111111);
-  }
-
   /*.timeRegister-color {*/
-  /*background-image: url("./assets/selected.jpg")*/
+    /*background-image: radial-gradient(#5a5a5a, #212121);*/
   /*}*/
 
-  .timeRegister-color2 {
-    background-image: radial-gradient(#763a00, #1f0f00);
+  .timeRegister-color {
+    background-image: radial-gradient(rgba(99, 99, 99, 0.82), #0c0c0c);
   }
 
-  .timeRegister-color3 {
-    /*background-image: radial-gradient(#ce7000, #7c123a);*/
 
-
-  }
-
-  .timeRegister-color55 {
-    background-image: radial-gradient(#75706e, #313030);
-
-
-  }
 
   .custom-btn:hover {
-    color: #3abcb1 !important;
+    color: #ffd02d !important;
+    /*color: #3abcb1 !important;*/
 
   }
 
