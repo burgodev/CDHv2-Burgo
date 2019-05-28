@@ -2,11 +2,10 @@
   <v-app id="app2" dark >
 
     <v-toolbar app fixed clipped-left v-if="isLogged" dark>
-      <v-btn round small text class="custom-btn"></v-btn>
-      <v-btn round small text class="custom-btn"></v-btn>
+
 
       <v-spacer/>
-      <v-toolbar-title class="primary--text">Controle de Horário</v-toolbar-title>
+      <v-toolbar-title class="white--text ml-5"></v-toolbar-title>
       <v-spacer/>
 
       <v-tooltip color="primary" bottom>
@@ -119,7 +118,7 @@
       },
 
       showCdh() {
-        this.$router.replace('/adminCDH')
+        this.$router.replace('/userCDH')
         this.selectedButtonColorCdh = !this.selectedButtonColorCdh;
         this.selectedButtonColorUser = false;
 

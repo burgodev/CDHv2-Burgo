@@ -13,14 +13,14 @@
 
 
           <v-text-field
-                        v-model="user.password"
-                        :append-icon="show1 ? 'visibility' : 'visibility_off'"
-                        :type="show1 ? 'text' : 'password'"
-                        placeholder="Password"
-                        name="input-10-1"
-                        counter
-                        @click:append="show1 = !show1"
-                        prepend-inner-icon="vpn_key"
+            v-model="user.password"
+            :append-icon="show1 ? 'visibility' : 'visibility_off'"
+            :type="show1 ? 'text' : 'password'"
+            placeholder="Password"
+            name="input-10-1"
+            counter
+            @click:append="show1 = !show1"
+            prepend-inner-icon="vpn_key"
           ></v-text-field>
         </v-card-text>
 

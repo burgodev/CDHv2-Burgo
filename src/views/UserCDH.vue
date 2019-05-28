@@ -5,7 +5,7 @@
         <v-toolbar flat>
 
           <v-toolbar-title
-            class="primary--text"
+            class="primary--text custom-btn"
             margin-left="10px">
             <v-icon
               class="custom-btn primary--text">
@@ -14,15 +14,14 @@
             CDH
           </v-toolbar-title>
 
-          <v-divider
-            class="mx-4 primary"
+         <v-divider
+            class="mx-4"
             inset
             vertical
-
           ></v-divider>
 
-          <h3 class="custom-btn font-weight-light.font-italic mr-2 grey--text"> {{selectUser}} </h3>
-          <h3 class="custom-btn font-weight-light.font-italic grey--text"> - {{workTimeLeft}} horas restantes </h3>
+          <h3 class="font-weight-light.font-italic mr-2 white--text"> {{selectUser}} </h3>
+          <h3 class="font-weight-light.font-italic white--text"> - {{workTimeLeft}} horas restantes </h3>
 
           <v-spacer></v-spacer>
 
@@ -51,13 +50,13 @@
             <v-layout justify-end align-center>
               <v-layout justify-end>
 
-                <v-btn class="custom-btn primary--text" icon fab round @click="userCdhSearch">
+                <v-btn class="custom-btn white--text mr-1 ml-2" icon fab round @click="userCdhSearch">
                   <v-icon class="custom-btn">search</v-icon>
                 </v-btn>
 
               </v-layout>
               <v-divider
-                class="mr-2 primary"
+                class="mr-2"
                 vertical
                 inset
               ></v-divider>

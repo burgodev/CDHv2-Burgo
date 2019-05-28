@@ -19,9 +19,6 @@
             vertical
           ></v-divider>
 
-
-
-
           <v-flex xs6 sm6 md4 d-flex>
             <v-select
               v-model="selectUser"
@@ -85,10 +82,8 @@
                   <span> Iniciar/Finalizar Sessão </span>
                 </v-tooltip>
               </v-layout>
-
             </v-layout>
           </v-flex>
-
 
         </v-toolbar>
 
@@ -142,15 +137,12 @@
 
   } from '../requests';
 
-
   function addZero(i) {
 
     if (i < 10) {
       i = "0" + i;
     }
     return i;
-
-
   }
 
   export default {
@@ -201,19 +193,13 @@
         this.getUser();
         this.getCdhYears();
 
-
         if (localStorage.getItem('sessionOpen') == "true") {
           this.selected = true;
         }
-
-
       },
 
-
-      showJustifyAbsence(justifyData) {
-
-
-        this.$refs.JustifyAbsence.open(data)
+      showJustifyAbsence() {
+        this.$refs.JustifyAbsence.open()
       },
 
       async sessionControl() {

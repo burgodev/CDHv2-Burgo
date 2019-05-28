@@ -13,7 +13,6 @@
             Usuários
           </v-toolbar-title>
 
-
           <v-divider
             class="mx-4"
             inset
@@ -28,7 +27,6 @@
             ></v-text-field>
           </v-flex>
 
-
           <v-layout justify-end>
             <v-divider
               class="mx-4"
@@ -37,28 +35,21 @@
             ></v-divider>
           </v-layout>
 
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
+          <v-divider vertical inset class="mr-3"/>
 
-          <v-icon
-            small
-            class="custom-btn"
-            @click="showCreateUser"
-          >
-            edit
-          </v-icon>
+
+          <v-btn class="custom-btn primary--text " outline small icon fab round @click="showCreateUser">
+            <v-icon class="custom-btn">add</v-icon>
+          </v-btn>
 
 
           <v-dialog persistent v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
-              <v-btn icon fab round class="custom-btn" v-on="on"
-              >
-                <v-icon class="custom-btn" dark>add</v-icon>
-              </v-btn>
-            </template>
+            <!--<template v-slot:activator="{ on }">-->
+            <!--<v-btn icon fab round class="custom-btn" v-on="on"-->
+            <!--&gt;-->
+            <!--<v-icon class="custom-btn" dark>add</v-icon>-->
+            <!--</v-btn>-->
+            <!--</template>-->
 
 
             <v-card>
@@ -69,7 +60,6 @@
               <v-divider
                 class="mx-8"
               ></v-divider>
-
 
               <v-card-text>
                 <v-container grid-list-md>
@@ -86,7 +76,9 @@
 
                     <v-flex xs12 sm6 md6>
                       <v-text-field v-model="editedItem.password" label="Senha"
-                                    prepend-icon="vpn_key"></v-text-field>
+                                    prepend-icon="vpn_key"
+
+                      ></v-text-field>
                     </v-flex>
 
                     <v-flex xs12 sm6 md6>
@@ -285,6 +277,12 @@
   } from '../requests';
   import EditUser from "../components/EditUser";
 
+  function addZero(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
 
   export default {
     name: "UsersBurgo",
@@ -363,14 +361,32 @@
 
     mounted() {
       this.initialize()
-
     },
 
     methods: {
-
       async initialize() {
         let ret = await AdminAPI.readAllUsers();
         console.log('readAllUsers', ret);
+
+        let myDate = new Date();
+
+        console.log('length', ret.data.length);
+
+        for (let i = 0; i < ret.data.length; i++) {
+
+          myDate.setTime(ret.data[i].entryDate);
+          ret.data[i].entryDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() +1)}/${addZero(myDate.getFullYear())}`
+
+          myDate.setTime(ret.data[i].exitDate);
+          ret.data[i].exitDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() +1)}/${addZero(myDate.getFullYear())}`
+
+          if (ret.data[i].entryDate == "NaN/NaN/NaN")
+            ret.data[i].entryDate = "";
+
+          if (ret.data[i].exitDate == "NaN/NaN/NaN")
+            ret.data[i].exitDate = "";
+        }
+
 
         this.users = ret.data;
       },

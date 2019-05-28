@@ -7,63 +7,60 @@
     >
       <v-card>
         <v-card-title class="headline"> Justificar Ausência</v-card-title>
-        <v-divider
-          class="mx-8"
-        ></v-divider>
 
-        <v-card-text>
-          <v-flex>
-            <v-form
-              ref="form"
-              v-model="valid"
-              lazy-validation
-            >
+        <v-divider class="mb-2"/>
 
-              <v-text-field
-                v-model="hours"
-                :rules="hoursRules"
-                label="Horas"
-                required
-              ></v-text-field>
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
 
-              <v-text-field
-                v-model="justification"
-                :rules="justificationRules"
-                label="Justificativa"
-                required
-              ></v-text-field>
+          <v-text-field
+            v-model="hours"
+            :rules="hoursRules"
+            label="Horas"
+            required
+            mask="##:##"
+            class="mx-4"
+          ></v-text-field>
 
 
-            </v-form>
-
-
+          <v-flex md12>
+            <v-text-field
+              v-model="justification"
+              :rules="justificationRules"
+              label="Justificativa"
+              required
+              class="mx-4"
+            ></v-text-field>
           </v-flex>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              @click="cancel"
-              round
-              outline
-              small
-              class="custom-btn"
-            >
-              Cancelar
-            </v-btn>
+        </v-form>
 
-            <v-btn
-              @click="confirm"
-              :disabled="!valid"
-              round
-              outline
-              small
-              class="custom-btn"
-            >
-              Confirmar
-            </v-btn>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            @click="cancel"
+            round
+            outline
+            small
+            class="custom-btn mb-2"
+          >
+            Cancelar
+          </v-btn>
 
-          </v-card-actions>
-        </v-card-text>
+          <v-btn
+            @click="confirm"
+            :disabled="!valid"
+            round
+            outline
+            small
+            class="custom-btn mb-2 mr-2"
+          >
+            Confirmar
+          </v-btn>
 
+        </v-card-actions>
 
       </v-card>
     </v-dialog>
@@ -73,7 +70,7 @@
 <script>
   import
     AdminApi
-  from '../requests'
+    from '../requests'
 
   export default {
     name: "JustifyAbsence",
@@ -82,16 +79,15 @@
       return {
         dialog: false,
         valid: true,
-        user:'',
+        user: '',
         hours: '',
         hoursRules: [
-          v => !!v || 'Hours is required',
-          v => (v && v.length <= 3) || 'Hours must be less than 3 characters'
+          v => !!v || 'Este campo é obrigatório',
+          v => (v && v.length >= 4) || 'Preencha este campo corretamente! (hh:mm)',
         ],
         justification: '',
         justificationRules: [
-          v => !!v || 'Justification is required',
-          v => (v && v.length >= 10) || 'Justifiaction must be more than 10 characters',
+          v => !!v || 'Este campo é obrigatório!',
         ],
         select: null,
       }
@@ -110,9 +106,9 @@
       //   this.$refs.form.resetValidation()
       // }
 
-     async confirm() {
-       let myDate = new Date();
-       myDate.setHours(this.hours);
+      async confirm() {
+        let myDate = new Date();
+        myDate.setHours(this.hours);
 
 
         let ret = await AdminApi.justifyAbsence(data);

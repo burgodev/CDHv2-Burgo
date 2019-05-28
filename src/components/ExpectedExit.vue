@@ -8,15 +8,14 @@
 
     >
       <v-card>
-        <v-card-title class="headline primary--text "> Previsão de Saída</v-card-title>
+        <v-card-title class="headline white--text "> Previsão de Saída</v-card-title>
         <v-layout align-center justify-start wrap>
+          <v-divider
+          ></v-divider>
         </v-layout>
 
-        <v-divider
-          class="primary"
-        ></v-divider>
 
-        <v-card-text >
+        <v-card-text>
           <v-form
             ref="form"
             v-model="valid"
@@ -26,7 +25,7 @@
               v-model="expectedExit"
               type="month"
               width="300"
-              class="mt-3 primary--text primary"
+              class="mt-1 ml-2 white--text "
               format="24hr"
             ></v-time-picker>
             <v-card></v-card>
@@ -34,12 +33,12 @@
         </v-card-text>
 
         <v-divider
-          class="primary mt-2"
+          class="mx-3 mt-1"
         ></v-divider>
 
 
         <v-spacer></v-spacer>
-        <v-card-actions >
+        <v-card-actions>
           <v-layout justify-end wrap>
             <v-btn
               @click="confirm"
@@ -47,7 +46,7 @@
               round
               small
               outline
-              class="custom-btn mt-2 mb-2"
+              class="custom-btn mt-2 mb-1 mr-2"
             >
               Confirmar
             </v-btn>
@@ -67,7 +66,6 @@
   import {UserAPI} from '../requests';
   import SessionConfirmation from "./SessionConfirmation";
   import ChangePassword from "./ChangePassword";
-
 
 
   export default {
