@@ -26,9 +26,7 @@
               item-text="name"
               item-value="id"
               label="Usuário"
-              placeholder="Admin"
 
-              @click="selectedUser"
             ></v-select>
           </v-flex>
 
@@ -79,7 +77,7 @@
                       <v-icon class="custom-btn">power_settings_new</v-icon>
                     </v-btn>
                   </template>
-                  <span> Iniciar/Finalizar Sessão </span>
+                  <span class="black--text"> Iniciar/Finalizar Sessão </span>
                 </v-tooltip>
               </v-layout>
             </v-layout>
@@ -122,6 +120,7 @@
 
         <JustifyAbsence ref="JustifyAbsence"/>
         <ExpectedExit ref="ExpectedExit"/>
+        <EndSessionConfirmation ref="EndSessionConfirmation"/>
 
       </v-flex>
     </v-layout>
@@ -136,6 +135,7 @@
     UserAPI
 
   } from '../requests';
+  import EndSessionConfirmation from "../components/EndSessionConfirmation";
 
   function addZero(i) {
 
@@ -147,10 +147,10 @@
 
   export default {
     name: "AdminCDH",
-    components: {ExpectedExit, JustifyAbsence},
+    components: {ExpectedExit, JustifyAbsence, EndSessionConfirmation},
 
     data: () => ({
-      selectUser: null,
+      selectUser:null,
       search: '',
       selectedMonth: null,
       selectedYear: null,
@@ -176,8 +176,6 @@
 
     mounted() {
       this.initialize()
-
-
     },
 
 
@@ -189,9 +187,10 @@
 
     methods: {
       async initialize() {
-        this.adminCdhSearch();
         this.getUser();
         this.getCdhYears();
+        this.adminCdhSearch();
+
 
         if (localStorage.getItem('sessionOpen') == "true") {
           this.selected = true;
@@ -207,15 +206,17 @@
         let id = await localStorage.getItem('id');
 
         if (this.selected) {
-          await this.$refs.ExpectedExit.open({});
-          await localStorage.setItem("sessionOpen", "true");
+          this.$refs.ExpectedExit.open(this.initialize.bind(this));
+          localStorage.setItem("sessionOpen", "true");
         } else {
-          let ret = await UserAPI.exit(id);
-          localStorage.setItem("sessionOpen", "false");
-          console.log('exit', ret);
+          this.$refs.EndSessionConfirmation.open();
+
+          // let ret = await UserAPI.exit(id);
+          // localStorage.setItem("sessionOpen", "false");
+          // console.log('exit', ret);
         }
 
-        await this.initialize();
+        this.initialize();
       },
 
 
@@ -242,6 +243,8 @@
         } else {
           id = this.selectUser;
         }
+
+        console.log(id, month, year)
 
         let ret = await AdminAPI.adminCdhConsult(id, month, year);
         console.log('adminCdhConsult', ret);
@@ -279,7 +282,11 @@
         console.log('getUser', ret);
 
         if (ret.success) {
-          this.users = ret.data;
+          this.users = ret.data
+          // console.log('this.users', this.users)
+          // localStorage.setItem('currentTimeRegister', ret.data.currentTimeRegister);
+
+
           let admin = {
             name:
               localStorage.getItem('name'),
@@ -288,6 +295,8 @@
           };
           this.users.push(admin)
         }
+
+
       },
 
       async getCdhYears() {
@@ -332,12 +341,6 @@
             return 11;
 
         }
-      },
-
-
-      selectedUser() {
-
-
       },
 
     }

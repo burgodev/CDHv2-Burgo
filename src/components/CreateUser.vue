@@ -197,6 +197,7 @@
       menu2: false,
       menu3: false,
       dialog: false,
+      updateTable: null,
 
       user: {
         name: '',
@@ -228,6 +229,11 @@
     },
 
     methods: {
+      open(fn) {
+        this.dialog = true;
+        this.updateTable = fn;
+      },
+
       close() {
         this.dialog = false
       },
@@ -264,8 +270,8 @@
         console.log('create user', ret);
 
 
+        this.updateTable();
         this.close();
-        this.$emit('initializetable');
 
         // this.$refs.Users.initialize();
       },
@@ -282,9 +288,6 @@
         this.$refs.menu3.save(date)
       },
 
-      open() {
-        this.dialog = true;
-      },
     }
   }
 </script>

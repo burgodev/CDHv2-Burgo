@@ -37,10 +37,15 @@
 
           <v-divider vertical inset class="mr-3"/>
 
+          <v-tooltip color="primary" bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on:click="showCreateUser" v-on="on" outline small icon fab round class="custom-btn primary--text">
+                <v-icon class="custom-btn">add</v-icon>
+              </v-btn>
+            </template>
+            <span class="black--text"> CDH </span>
+          </v-tooltip>
 
-          <v-btn class="custom-btn primary--text " outline small icon fab round @click="showCreateUser">
-            <v-icon class="custom-btn">add</v-icon>
-          </v-btn>
 
 
           <v-dialog persistent v-model="dialog" max-width="500px">
@@ -375,10 +380,10 @@
         for (let i = 0; i < ret.data.length; i++) {
 
           myDate.setTime(ret.data[i].entryDate);
-          ret.data[i].entryDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() +1)}/${addZero(myDate.getFullYear())}`
+          ret.data[i].entryDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
 
           myDate.setTime(ret.data[i].exitDate);
-          ret.data[i].exitDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() +1)}/${addZero(myDate.getFullYear())}`
+          ret.data[i].exitDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
 
           if (ret.data[i].entryDate == "NaN/NaN/NaN")
             ret.data[i].entryDate = "";
@@ -391,9 +396,6 @@
         this.users = ret.data;
       },
 
-      showJustifyAbsence() {
-        this.$refs.JustifyAbsence.open({})
-      },
 
       editItem(item) {
         this.editedIndex = this.users.indexOf(item);
@@ -488,13 +490,12 @@
       },
 
       showCreateUser() {
-        this.$refs.CreateUser.open({});
+        this.$refs.CreateUser.open(this.initialize.bind(this));
 
-        this.initialize();
       },
 
       showEditUser() {
-        this.$refs.EditUser.open({});
+        this.$refs.EditUser.open(this.initialize.bind(this));
         this.close;
       },
 

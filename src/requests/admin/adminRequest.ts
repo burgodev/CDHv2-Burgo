@@ -86,7 +86,6 @@ export class adminRequests {
     }
   }
 
-
   public async justifyAbsence(data: justifyAbsence){
     try {
       let ret = await axios({

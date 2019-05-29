@@ -10,7 +10,7 @@
 
       <v-tooltip color="primary" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn :color="selectedButtonCdh" v-on:click="showCdh" v-on="on" round outline small class="custom-btn ">
+          <v-btn :color="selectedButtonCdh" v-on:click="showCdh" v-if="isAdm" v-on="on" round outline small class="custom-btn">
             <v-icon class="custom-btn">view_list</v-icon>
           </v-btn>
         </template>
@@ -19,7 +19,7 @@
 
       <v-tooltip color="primary" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn :color="selectedButtonUser" v-on:click="showUsers" v-on="on" round outline small class="custom-btn ">
+          <v-btn :color="selectedButtonUser" v-on:click="showUsers" v-if="isAdm" v-on="on" round outline small class="custom-btn ">
             <v-icon class="custom-btn">people</v-icon>
           </v-btn>
         </template>
@@ -83,6 +83,13 @@
 
       selectedButtonUser() {
         if (this.selectedButtonColorUser) return 'primary';
+
+      },
+
+      isAdm(){
+        this.selectedButtonColorCdh = true;
+        return localStorage.getItem('isAdm') === 'true';
+
       },
 
       isLogged(){
@@ -97,28 +104,21 @@
         let ret = await UserAPI.logout();
         console.log('logout', ret);
 
-        localStorage.setItem('isLogged', 'false');
-        console.log(localStorage.getItem('isLogged'));
+        // localStorage.setItem('isLogged', 'false');
 
         this.$router.replace('/login');
         this.selectedButtonColorCdh = false;
         this.selectedButtonColorUser = false;
-
-      },
-
-      isAdm(){
-
-
       },
 
       showUsers() {
-        this.$router.replace('/users')
+        this.$router.replace('/Users');
         this.selectedButtonColorUser = !this.selectedButtonColorUser;
         this.selectedButtonColorCdh = false;
       },
 
       showCdh() {
-        this.$router.replace('/userCDH')
+        this.$router.replace('/AdminCDH');
         this.selectedButtonColorCdh = !this.selectedButtonColorCdh;
         this.selectedButtonColorUser = false;
 
@@ -162,6 +162,10 @@
   .timeRegister-color {
     background-image: radial-gradient(rgba(99, 99, 99, 0.82), #0c0c0c);
   }
+
+  /*.timeRegister-color {*/
+    /*background-image: radial-gradient(rgba(130, 130, 130, 0.82), #171717);*/
+  /*}*/
 
 
 

@@ -87,6 +87,10 @@
         this.updateTable = fn;
       },
 
+      close() {
+        this.dialog = false
+      },
+
       async confirm() {
         let id = await localStorage.getItem('id');
         let date = new Date();
@@ -106,7 +110,7 @@
         this.$refs.SessionConfirmation.open();
 
         this.updateTable();
-        this.dialog = false;
+        this.close();
       }
     }
   }

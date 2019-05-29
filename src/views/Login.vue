@@ -70,6 +70,7 @@
 
     methods: {
       async login() {
+        localStorage.clear();
         let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
         console.log('login', ret)
 
@@ -78,10 +79,11 @@
           localStorage.setItem('accessKey', ret.data.accessKey);
           localStorage.setItem('id', ret.data.id);
           localStorage.setItem('name', ret.data.name)
-          localStorage.setItem('isLogged', 'true');
-          console.log(localStorage.getItem('isLogged'));
 
-          this.$router.replace('/UserCDH')
+          ret.data.isAdm ?
+            (this.$router.replace('/AdminCDH'), localStorage.setItem('isAdm', 'true')) :
+            (this.$router.replace('/UserCDH'), localStorage.setItem('isAdm', 'false'));
+
         }
       },
     }

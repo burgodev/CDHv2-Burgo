@@ -81,6 +81,7 @@
         valid: true,
         user: '',
         hours: '',
+
         hoursRules: [
           v => !!v || 'Este campo é obrigatório',
           v => (v && v.length >= 4) || 'Preencha este campo corretamente! (hh:mm)',
@@ -89,6 +90,7 @@
         justificationRules: [
           v => !!v || 'Este campo é obrigatório!',
         ],
+
         select: null,
       }
     },
@@ -115,7 +117,7 @@
         console.log('JustifyAbsence', ret)
       },
 
-      open(data) {
+      open() {
         this.dialog = true;
       },
 

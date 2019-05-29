@@ -231,7 +231,6 @@
 
         let workTimeLeft = new Date();
 
-
         if (ret.data.length != 0) {
           workTimeLeft.setTime(ret.data[0].workTimeLeft);
 
@@ -239,7 +238,6 @@
           workTimeLeft.setHours(80);
 
         }
-
 
         //Alimenta a table
         let cdh = [];
