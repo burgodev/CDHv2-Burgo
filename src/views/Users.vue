@@ -399,6 +399,7 @@
 
       editItem(item) {
         this.editedIndex = this.users.indexOf(item);
+
         this.editedItem = {
           ...item
         };

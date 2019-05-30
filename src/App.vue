@@ -103,6 +103,7 @@
       async logout() {
         let ret = await UserAPI.logout();
         console.log('logout', ret);
+        // localStorage.setItem('isAdm', 'false');
 
         // localStorage.setItem('isLogged', 'false');
 

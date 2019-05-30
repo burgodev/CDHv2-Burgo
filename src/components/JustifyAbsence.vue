@@ -17,8 +17,7 @@
         >
 
           <v-text-field
-            v-model="hours"
-            :rules="hoursRules"
+            v-model="data.hours"
             label="Horas"
             required
             mask="##:##"
@@ -28,8 +27,7 @@
 
           <v-flex md12>
             <v-text-field
-              v-model="justification"
-              :rules="justificationRules"
+              v-model="data.justification"
               label="Justificativa"
               required
               class="mx-4"
@@ -68,9 +66,9 @@
 </template>
 
 <script>
-  import
-    AdminApi
-    from '../requests'
+  import {
+    AdminAPI,
+  } from '../requests';
 
   export default {
     name: "JustifyAbsence",
@@ -79,17 +77,26 @@
       return {
         dialog: false,
         valid: true,
-        user: '',
-        hours: '',
 
-        hoursRules: [
-          v => !!v || 'Este campo é obrigatório',
-          v => (v && v.length >= 4) || 'Preencha este campo corretamente! (hh:mm)',
-        ],
-        justification: '',
-        justificationRules: [
-          v => !!v || 'Este campo é obrigatório!',
-        ],
+        data: {
+          day: null,
+          month: null,
+          year: null,
+          id: null,
+          currentTimeRegister: null,
+          hours: null,
+          justification: null,
+
+        },
+        //
+        // hoursRules: [
+        //   v => !!v || 'Este campo é obrigatório',
+        //   v => (v && v.length >= 4) || 'Preencha este campo corretamente! (hh:mm)',
+        // ],
+        //
+        // justificationRules: [
+        //   v => !!v || 'Este campo é obrigatório!',
+        // ],
 
         select: null,
       }
@@ -109,16 +116,23 @@
       // }
 
       async confirm() {
-        let myDate = new Date();
-        myDate.setHours(this.hours);
+        let timeStampHour = (this.data.hours.slice(0, 2) * 60 * 60 * 1000);
+        let timeStampMin = (this.data.hours.slice(2, 4) * 60 * 1000);
+        let data = {
+          ...this.data
+        };
+
+        data.hours = timeStampHour + timeStampMin;
 
 
-        let ret = await AdminApi.justifyAbsence(data);
+        let ret = await AdminAPI.justifyAbsence(data);
+
         console.log('JustifyAbsence', ret)
       },
 
-      open() {
+      open(data) {
         this.dialog = true;
+        this.data = data;
       },
 
       cancel() {

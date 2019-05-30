@@ -132,8 +132,6 @@
   import ExpectedExit from "../components/ExpectedExit";
   import {
     AdminAPI,
-    UserAPI
-
   } from '../requests';
   import EndSessionConfirmation from "../components/EndSessionConfirmation";
 
@@ -150,11 +148,12 @@
     components: {ExpectedExit, JustifyAbsence, EndSessionConfirmation},
 
     data: () => ({
-      selectUser:null,
+      selectUser: null,
       search: '',
       selectedMonth: null,
       selectedYear: null,
       selected: false,
+      editedIndex: -1,
       headers: [
 
         {text: 'Dia', value: 'day', align: 'center'},
@@ -187,36 +186,56 @@
 
     methods: {
       async initialize() {
-        this.getUser();
-        this.getCdhYears();
         this.adminCdhSearch();
+        this.getCdhYears();
+        this.getUser();
+
+        if (localStorage.getItem('sessionOpen') === "true")
+          this.selected = true
+        else
+          this.selected = false;
 
 
-        if (localStorage.getItem('sessionOpen') == "true") {
-          this.selected = true;
-        }
+        // if (localStorage.getItem('sessionOpen') == "true") {
+        //   this.selected = true;
+        // }
       },
 
-      showJustifyAbsence() {
-        this.$refs.JustifyAbsence.open()
+      showJustifyAbsence(item) {
+        this.editedIndex = this.timeRegister.indexOf(item);
+        // let month = localStorage.getItem('month');
+        // let year = localStorage.getItem('year');
+        // let id = localStorage.getItem('id');
+        // let currentTimeRegister = localStorage.getItem('currentTimeRegister');
+        let data= {
+            day: item.day,
+            month: localStorage.getItem('month'),
+            year: localStorage.getItem('year'),
+            id:localStorage.getItem('id'),
+            currentTimeRegister: localStorage.getItem('currentTimeRegister')
+          };
+
+        this.$refs.JustifyAbsence.open(data)
+
+
+        // console.log('day', item.day, 'month', month, 'year', year, 'id', id, 'currentTimeRegister', currentTimeRegister)
+        // console.log(this.timeRegister.day);
       },
 
       async sessionControl() {
-        this.selected = !this.selected;
-        let id = await localStorage.getItem('id');
+        // let id = await localStorage.getItem('id');
 
-        if (this.selected) {
+        if (!this.selected) {
           this.$refs.ExpectedExit.open(this.initialize.bind(this));
           localStorage.setItem("sessionOpen", "true");
         } else {
-          this.$refs.EndSessionConfirmation.open();
+          this.$refs.EndSessionConfirmation.open(this.initialize.bind(this));
 
           // let ret = await UserAPI.exit(id);
           // localStorage.setItem("sessionOpen", "false");
           // console.log('exit', ret);
         }
 
-        this.initialize();
       },
 
 
@@ -237,6 +256,9 @@
           year = date.getFullYear();
         }
 
+        localStorage.setItem('month', month);
+        localStorage.setItem('year', year);
+
 
         if (!this.selectUser) {
           id = localStorage.getItem('id');
@@ -244,7 +266,6 @@
           id = this.selectUser;
         }
 
-        console.log(id, month, year)
 
         let ret = await AdminAPI.adminCdhConsult(id, month, year);
         console.log('adminCdhConsult', ret);
@@ -282,18 +303,28 @@
         console.log('getUser', ret);
 
         if (ret.success) {
-          this.users = ret.data
+          this.users = ret.data;
+          // console.log(this.users[0].id)
+
+
+          for (let i = 0; i < this.users.length; i++) {
+            if (this.users[i].id === localStorage.getItem('id')) {
+              localStorage.setItem('currentTimeRegister', this.users[i].currentTimeRegister)
+            }
+          }
+          // console.log('id', id, 'currentTimeRegister', localStorage.getItem('currentTimeRegister'))
+
           // console.log('this.users', this.users)
-          // localStorage.setItem('currentTimeRegister', ret.data.currentTimeRegister);
 
 
-          let admin = {
-            name:
-              localStorage.getItem('name'),
-            id:
-              localStorage.getItem('id')
-          };
-          this.users.push(admin)
+          //TALVEZ BUGE COM ISSO COMENTADO, VAMO VE ->
+          //   let admin = {
+          //     name:
+          //       localStorage.getItem('name'),
+          //     id:
+          //       localStorage.getItem('id')
+          //   };
+          //   this.users.push(admin)
         }
 
 
@@ -304,8 +335,7 @@
         let year = myDate.getFullYear();
 
 
-
-        for (let i = 0; i < 5; i++){
+        for (let i = 0; i < 5; i++) {
           this.year.push(year);
 
           year -= 1;

@@ -70,7 +70,16 @@
 
     methods: {
       async login() {
-        localStorage.clear();
+
+        if (localStorage.getItem('sessionOpen') === 'true') {
+          localStorage.clear();
+          localStorage.setItem('sessionOpen', 'true')
+        } else {
+          localStorage.clear();
+
+        }
+
+
         let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
         console.log('login', ret)
 

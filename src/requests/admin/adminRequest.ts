@@ -86,11 +86,13 @@ export class adminRequests {
     }
   }
 
-  public async justifyAbsence(data: justifyAbsence){
+  // public async justifyAbsence(data: justifyAbsence){
+  public async justifyAbsence(data: {}){
     try {
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: '/api/admin/user/justify/update/',
+        // url: '/api/admin/user/justify/',
         method: 'post',
         data: data,
         headers: await Utils.handlerHead(),
@@ -100,4 +102,6 @@ export class adminRequests {
       return e;
     }
   }
+
+
 }

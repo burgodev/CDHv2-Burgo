@@ -17,7 +17,7 @@
         ></v-divider>
 
         <v-card-text class="white--text" >
-          Ô mô quiridu, queres vazar mesmo ou tais viajando?
+          Ô mô quiridu, tais vazante mesmo ou viajasse???
         </v-card-text>
 
         <v-divider
@@ -31,7 +31,7 @@
             small
             outline
             class="custom-btn mt-2 mb-1 mr-2"
-            @click="dialog = false"
+            @click="close"
           >
             Foi mal, viajei!
           </v-btn>
@@ -41,17 +41,22 @@
             small
             outline
             class="custom-btn mt-2 mb-1 mr-2"
-            @click="dialog = false"
+            @click="endSession"
           >
             To vazante!
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
   </div>
 </template>
 
 <script>
+  import {
+    UserAPI
+  } from '../requests';
+
   export default {
     name: "EndSessionConfirmation",
 
@@ -59,21 +64,36 @@
       return {
         dialog: false,
         showDialog: null,
+        updateTable: null,
       }
 
     },
 
     methods: {
 
-      open() {
+      open(fn) {
         this.dialog = true;
+        this.updateTable = fn;
       },
 
       close() {
         this.dialog = false;
+      },
+
+      async endSession() {
+        let id = await localStorage.getItem('id');
+        let ret = await UserAPI.exit(id);
+        localStorage.setItem("sessionOpen", "false");
+        console.log('exit', ret);
+
+        localStorage.setItem("sessionOpen", "false");
+
+        this.updateTable();
+        this.close();
       }
     }
   }
+
 </script>
 
 
