@@ -22,7 +22,9 @@
           <v-flex xs6 sm6 md4 d-flex>
             <v-select
               v-model="selectUser"
+              return-object
               :items="users"
+              @change="adminCdhSearch"
               item-text="name"
               item-value="id"
               label="Usuário"
@@ -36,6 +38,7 @@
             <v-select
               :items="month"
               v-model="selectedMonth"
+              @change="adminCdhSearch"
               label="Mês"
             ></v-select>
           </v-flex>
@@ -46,6 +49,7 @@
             <v-select
               :items="year"
               v-model="selectedYear"
+              @change="adminCdhSearch"
               label="Ano"
             ></v-select>
           </v-flex>
@@ -53,35 +57,28 @@
 
           <v-spacer></v-spacer>
 
-          <v-flex xs2 sm2 md2 d-flex>
-            <v-layout justify-end align-center>
-              <v-layout justify-end>
+          <v-divider
+            class="ml-3"
+            vertical
+            inset
+          ></v-divider>
 
-                <v-btn class="custom-btn" icon fab round @click="adminCdhSearch">
-                  <v-icon class="custom-btn">search</v-icon>
+
+          <v-layout justify-end align-end>
+
+
+            <v-tooltip color="primary" bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
+                       v-on="on">
+                  <v-icon class="custom-btn">power_settings_new</v-icon>
                 </v-btn>
+              </template>
+              <span class="black--text"> Iniciar/Finalizar Sessão </span>
+            </v-tooltip>
 
-              </v-layout>
-              <v-divider
-                class="mx-1"
-                vertical
-                inset
-              ></v-divider>
+          </v-layout>
 
-
-              <v-layout wrap>
-                <v-tooltip color="primary" bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
-                           v-on="on">
-                      <v-icon class="custom-btn">power_settings_new</v-icon>
-                    </v-btn>
-                  </template>
-                  <span class="black--text"> Iniciar/Finalizar Sessão </span>
-                </v-tooltip>
-              </v-layout>
-            </v-layout>
-          </v-flex>
 
         </v-toolbar>
 
@@ -166,6 +163,7 @@
       ],
       timeRegister: [],
       users: [],
+      usersIndex: -1,
       month: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
       year: []
@@ -186,14 +184,20 @@
 
     methods: {
       async initialize() {
+        let myDate = new Date();
+
+
         this.adminCdhSearch();
         this.getCdhYears();
         this.getUser();
 
-        if (localStorage.getItem('sessionOpen') === "true")
+        if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()){
           this.selected = true
-        else
+        }
+        else{
           this.selected = false;
+          sessionStorage.setItem('lastDay', String(myDate.getDate()));
+        }
 
 
         // if (localStorage.getItem('sessionOpen') == "true") {
@@ -202,18 +206,30 @@
       },
 
       showJustifyAbsence(item) {
-        this.editedIndex = this.timeRegister.indexOf(item);
+        console.log('objeto', this.selectUser.id)
+        console.log('objeto', this.selectUser.currentTimeRegister)
+
+//nao ta funcionante ainda, nao ta retroando currentTimeRegsiter de um dos usuarios. verificar isso e aprincipio ta d bobs
+
+        let index = this.users.indexOf(item);
+        console.log('index', index)
+        console.log(this.users)
+
+        // console.log(this.timeRegister[0]);
         // let month = localStorage.getItem('month');
         // let year = localStorage.getItem('year');
         // let id = localStorage.getItem('id');
         // let currentTimeRegister = localStorage.getItem('currentTimeRegister');
-        let data= {
-            day: item.day,
-            month: localStorage.getItem('month'),
-            year: localStorage.getItem('year'),
-            id:localStorage.getItem('id'),
-            currentTimeRegister: localStorage.getItem('currentTimeRegister')
-          };
+
+        console.log(this.users[this.editedIndex]);
+
+        let data = {
+          day: item.day,
+          month: localStorage.getItem('month'),
+          year: localStorage.getItem('year'),
+          // userId: this.users[index].id,
+          // currentTimeRegister: this.users[index].currentTimeRegister
+        };
 
         this.$refs.JustifyAbsence.open(data)
 
@@ -235,7 +251,6 @@
           // localStorage.setItem("sessionOpen", "false");
           // console.log('exit', ret);
         }
-
       },
 
 
@@ -263,7 +278,7 @@
         if (!this.selectUser) {
           id = localStorage.getItem('id');
         } else {
-          id = this.selectUser;
+          id = this.selectUser.id;
         }
 
 
@@ -292,8 +307,12 @@
                 exit: formatedExit,
                 timeWorked: ret.data[0].days[0].timeWorked
               });
+
+              let lastDay = ret.data[0].days[0].day;
+              sessionStorage.setItem('lastDay', lastDay)
             }
           }
+
         }
         this.timeRegister = cdh;
       },

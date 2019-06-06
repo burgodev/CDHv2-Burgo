@@ -14,7 +14,7 @@
             CDH
           </v-toolbar-title>
 
-         <v-divider
+          <v-divider
             class="mx-4"
             inset
             vertical
@@ -25,57 +25,48 @@
 
           <v-spacer></v-spacer>
 
-          <v-flex md2 mr-2>
-            <v-select
-              v-model="selectedMonth"
-              :items="month"
-              placeholder="Mês"
-              class="custom-btn "
-              dark
 
-            ></v-select>
-          </v-flex>
+          <v-layout wrap justify-end>
+            <v-flex md4 mr-2>
+              <v-select
+                v-model="selectedMonth"
+                :items="month"
+                @change="userCdhSearch"
+                placeholder="Mês"
+                class="custom-btn "
+                dark
+              ></v-select>
+            </v-flex>
 
-          <v-flex md1>
-            <v-select
-              class="custom-btn primary--text"
-              v-model="selectedYear"
-              :items="year"
-              placeholder="Ano"
-              dark
-            ></v-select>
-          </v-flex>
-
-          <v-flex xs2 sm2 md2 d-flex>
-            <v-layout justify-end align-center>
-              <v-layout justify-end>
-
-                <v-btn class="custom-btn white--text mr-1 ml-2" icon fab round @click="userCdhSearch">
-                  <v-icon class="custom-btn">search</v-icon>
-                </v-btn>
-
-              </v-layout>
-              <v-divider
-                class="mr-2"
-                vertical
-                inset
-              ></v-divider>
+            <v-flex md4>
+              <v-select
+                class="custom-btn primary--text"
+                v-model="selectedYear"
+                :items="year"
+                @change="userCdhSearch"
+                placeholder="Ano"
+                dark
+              ></v-select>
+            </v-flex>
+          </v-layout>
 
 
-              <v-layout wrap>
-                <v-tooltip color="primary" bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
-                           v-on="on">
-                      <v-icon class="custom-btn">power_settings_new</v-icon>
-                    </v-btn>
-                  </template>
-                  <span class="black--text"> Iniciar/Finalizar Sessão </span>
-                </v-tooltip>
-              </v-layout>
+          <v-divider
+            class="mx-4"
+            vertical
+            inset
+          ></v-divider>
 
-            </v-layout>
-          </v-flex>
+
+          <v-tooltip color="primary" bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
+                     v-on="on">
+                <v-icon class="custom-btn">power_settings_new</v-icon>
+              </v-btn>
+            </template>
+            <span class="black--text"> Iniciar/Finalizar Sessão </span>
+          </v-tooltip>
 
 
         </v-toolbar>
@@ -93,11 +84,13 @@
             <td class="text-xs-center">{{ props.item.entry }}</td>
             <td class="text-xs-center">{{ props.item.exit }}</td>
             <td class="text-xs-center">{{ props.item.timeWorked }}</td>
+
             <td class="justify-center layout px-0">
               <v-icon
                 small
                 class="custom-btn"
-                @click="showJustifyAbsence(props.item)"
+                @click="showJustifyAbsenceUser(props.item)"
+                :disabled="hasJustification(props.item)"
               >
                 search
               </v-icon>
@@ -111,20 +104,22 @@
           </template>
         </v-data-table>
 
-        <JustifyAbsence ref="JustifyAbsence"/>
+        <JustifyAbsenceUser ref="JustifyAbsenceUser"/>
         <ExpectedExit ref="ExpectedExit"/>
-
+        <EndSessionConfirmation ref="EndSessionConfirmation"/>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-  import JustifyAbsence from "../components/JustifyAbsence";
+  import JustifyAbsenceUser from "../components/JustifyAbsenceUser";
   import ExpectedExit from "../components/ExpectedExit";
+  import EndSessionConfirmation from "../components/EndSessionConfirmation";
   import {
     UserAPI
   } from '../requests';
+
 
 
   function addZero(i) {
@@ -136,7 +131,7 @@
 
   export default {
     name: "UserCDH",
-    components: {ExpectedExit, JustifyAbsence},
+    components: {ExpectedExit, JustifyAbsenceUser, EndSessionConfirmation},
 
     data: () => ({
       selectUser: '',
@@ -171,42 +166,70 @@
     computed: {
       sessionButton() {
         if (this.selected) return 'primary';
-      },
+      }
+
     },
 
     methods: {
       async initialize() {
+        let myDate = new Date();
+
         this.userCdhSearch();
         this.getUser();
         this.getCdhYears();
 
-        this.selectUser = localStorage.getItem('name');
-        console.log(this.selectUser);
 
-        if (localStorage.getItem('sessionOpen') == "true") {
-          this.selected = true;
+        if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()) {
+          this.selected = true
+        } else {
+          this.selected = false;
+          sessionStorage.setItem('lastDay', String(myDate.getDate()));
         }
+
+      },
+
+      hasJustification(data) {
+        console.log(data.justification);
+
+        if (data.justification) {
+          console.log('entrou no if')
+          return false;
+        }
+
+
       },
 
 
-      showJustifyAbsence() {
-        this.$refs.JustifyAbsence.open()
+      showJustifyAbsenceUser(data) {
+        console.log('caiu no showJustify', data);
+
+        if (data.justification) {
+          this.$refs.JustifyAbsenceUser.open(data)
+        }
+
+
       },
 
       async sessionControl() {
-        this.selected = !this.selected;
-        let id = await localStorage.getItem('id');
+        // this.selected = !this.selected;
+        // let id = await localStorage.getItem('id');
+        //
+        // if (this.selected) {
+        //   this.$refs.ExpectedExit.open(this.initialize.bind(this));
+        //   localStorage.setItem("sessionOpen", "true");
+        // } else {
+        //   let ret = await UserAPI.exit(id);
+        //   localStorage.setItem("sessionOpen", "false");
+        //   console.log('exit', ret);
 
-        if (this.selected) {
+        if (!this.selected) {
           this.$refs.ExpectedExit.open(this.initialize.bind(this));
           localStorage.setItem("sessionOpen", "true");
         } else {
-          let ret = await UserAPI.exit(id);
-          localStorage.setItem("sessionOpen", "false");
-          console.log('exit', ret);
+          this.$refs.EndSessionConfirmation.open(this.initialize.bind(this));
         }
 
-        this.initialize();
+        // this.initialize();
       },
 
       async userCdhSearch() {
@@ -259,12 +282,18 @@
                 day: ret.data[0].days[0].day,
                 entry: formatedEntry,
                 exit: formatedExit,
-                timeWorked: ret.data[0].days[0].timeWorked
+                timeWorked: ret.data[0].days[0].timeWorked,
+                justification: ret.data[0].days[0].justification
               });
             }
           }
         }
         this.timeRegister = cdh;
+
+
+        // if (localStorage.getItem('sessionOpen') == "true") {
+        //   this.selected = true;
+        // }
       },
 
       getUser() {
@@ -313,7 +342,6 @@
             return 10;
           case 'Dezembro':
             return 11;
-
         }
       },
 

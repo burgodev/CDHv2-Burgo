@@ -43,7 +43,7 @@ export class adminRequests {
     }
   }
 
-  public async deleteUser(userId: deleteUser){
+  public async deleteUser(userId: deleteUser) {
     try {
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
@@ -57,13 +57,15 @@ export class adminRequests {
     }
   }
 
-  public async updateUser(update: updateUser){
+  // public async updateUser(update: updateUser){
+  public async updateUser(update: any) {
     try {
+      console.log('update dentro da função request', update)
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: '/api/admin/user/update',
         method: 'put',
-        data: {update},
+        data: update,
         headers: await Utils.handlerHead(),
       });
       return ret.data;
@@ -86,15 +88,14 @@ export class adminRequests {
     }
   }
 
-  // public async justifyAbsence(data: justifyAbsence){
-  public async justifyAbsence(data: {}){
+  public async justifyAbsence(update: justifyAbsence) {
+    // public async justifyAbsence(data: {}){
     try {
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: '/api/admin/user/justify/update/',
-        // url: '/api/admin/user/justify/',
-        method: 'post',
-        data: data,
+        method: 'put',
+        data: update,
         headers: await Utils.handlerHead(),
       });
       return ret.data;
@@ -102,6 +103,4 @@ export class adminRequests {
       return e;
     }
   }
-
-
 }

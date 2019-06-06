@@ -86,7 +86,6 @@
         localStorage.setItem("sessionOpen", "false");
         console.log('exit', ret);
 
-        localStorage.setItem("sessionOpen", "false");
 
         this.updateTable();
         this.close();

@@ -50,13 +50,15 @@ export class adminRequests {
             return e;
         }
     }
+    // public async updateUser(update: updateUser){
     async updateUser(update) {
         try {
+            console.log('update dentro da função request', update);
             let ret = await axios({
                 baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
                 url: '/api/admin/user/update',
                 method: 'put',
-                data: { update },
+                data: update,
                 headers: await Utils.handlerHead(),
             });
             return ret.data;
@@ -79,13 +81,14 @@ export class adminRequests {
             return e;
         }
     }
-    async justifyAbsence(data) {
+    async justifyAbsence(update) {
+        // public async justifyAbsence(data: {}){
         try {
             let ret = await axios({
                 baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
                 url: '/api/admin/user/justify/update/',
-                method: 'post',
-                data: data,
+                method: 'put',
+                data: update,
                 headers: await Utils.handlerHead(),
             });
             return ret.data;

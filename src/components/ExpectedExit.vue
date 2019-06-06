@@ -23,10 +23,12 @@
           >
             <v-time-picker
               v-model="expectedExit"
+              scrollable
               type="month"
               width="300"
               class="mt-1 ml-2 white--text "
               format="24hr"
+              @keyup.enter.native="confirm"
             ></v-time-picker>
             <v-card></v-card>
           </v-form>

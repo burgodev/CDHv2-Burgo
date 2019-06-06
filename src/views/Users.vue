@@ -14,12 +14,12 @@
           </v-toolbar-title>
 
           <v-divider
-            class="mx-4"
+            class="ml-3 mr-4"
             inset
             vertical
           ></v-divider>
 
-          <v-flex xs3 sm3 md3>
+          <v-flex xs3 sm3 md9>
             <v-text-field
               v-model="search"
               append-icon="search"
@@ -29,7 +29,6 @@
 
           <v-layout justify-end>
             <v-divider
-              class="mx-4"
               inset
               vertical
             ></v-divider>
@@ -39,13 +38,13 @@
 
           <v-tooltip color="primary" bottom>
             <template v-slot:activator="{ on }">
-              <v-btn v-on:click="showCreateUser" v-on="on" outline small icon fab round class="custom-btn primary--text">
+              <v-btn v-on:click="showCreateUser" v-on="on" outline small icon fab round
+                     class="custom-btn primary--text">
                 <v-icon class="custom-btn">add</v-icon>
               </v-btn>
             </template>
             <span class="black--text"> CDH </span>
           </v-tooltip>
-
 
 
           <v-dialog persistent v-model="dialog" max-width="500px">
@@ -78,14 +77,11 @@
                     <v-flex xs12 sm6 md6>
                       <v-text-field v-model="editedItem.email" label="Email" prepend-icon="email"></v-text-field>
                     </v-flex>
-
                     <v-flex xs12 sm6 md6>
                       <v-text-field v-model="editedItem.password" label="Senha"
                                     prepend-icon="vpn_key"
-
                       ></v-text-field>
                     </v-flex>
-
                     <v-flex xs12 sm6 md6>
                       <v-text-field v-model="editedItem.cpf" label="CPF"
                                     prepend-icon="credit_card" mask="###-###-###-##"
@@ -186,7 +182,7 @@
                             ></v-text-field>
                           </template>
                           <v-date-picker
-                            color="primary"
+                            class="primary black--text"
                             ref="picker"
                             v-model="editedItem.exitDate"
                             :max="new Date().toISOString().substr(0, 10)"
@@ -240,7 +236,8 @@
             <td class="justify-center layout px-0">
               <v-icon
                 small
-                @click="editItem(props.item)"
+                @click="showEditUser(props.item)"
+
                 class="custom-btn"
               >
                 edit
@@ -379,12 +376,20 @@
 
         for (let i = 0; i < ret.data.length; i++) {
 
-          myDate.setTime(ret.data[i].entryDate);
-          ret.data[i].entryDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
+          if (ret.data[i].entryDate) {
+            myDate.setTime(ret.data[i].entryDate);
+            ret.data[i].entryDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
+          }
 
-          myDate.setTime(ret.data[i].exitDate);
-          ret.data[i].exitDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
+          if (ret.data[i].exitDate) {
+            myDate.setTime(ret.data[i].exitDate);
+            ret.data[i].exitDate = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
+          }
 
+          if (ret.data[i].birthday) {
+            myDate.setTime(ret.data[i].birthday);
+            ret.data[i].birthday = `${addZero(myDate.getDate())}/${addZero(myDate.getMonth() + 1)}/${addZero(myDate.getFullYear())}`
+          }
           if (ret.data[i].entryDate == "NaN/NaN/NaN")
             ret.data[i].entryDate = "";
 
@@ -394,18 +399,18 @@
 
 
         this.users = ret.data;
-      },
+      }
+      ,
 
 
       editItem(item) {
         this.editedIndex = this.users.indexOf(item);
-
         this.editedItem = {
           ...item
         };
-
         this.dialog = true
-      },
+      }
+      ,
 
       async deleteItem(item) {
         const index = this.users.indexOf(item);
@@ -417,7 +422,8 @@
         }
 
         this.initialize();
-      },
+      }
+      ,
 
       close() {
         this.dialog = false
@@ -425,83 +431,78 @@
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         }, 300)
-      },
+      }
+      ,
 
       async save() {
-        if (this.editedIndex > -1) {
-          //update user => NAO TA FUNCIONANTE
-          Object.assign(this.users[this.editedIndex], this.editedItem);
-          console.log(this.editedItem.id);
-          let ret = await AdminAPI.updateUser(this.editedItem);
+        // if (this.editedIndex > -1) {
+        //update user => NAO TA FUNCIONANTE
+        // Object.assign(this.users[this.editedIndex], this.editedItem);
 
-          console.log('update user', ret)
-        } else {
-          //new user =>
-          let myDate = new Date();
-          let newUser = {
+        let update = {
+          id: this.editedItem.id,
+          update: {
             ...this.editedItem
-          };
+          }
+        };
 
-          // //formata data de string pra timeStamp
-          let year = newUser.birthday.slice(0, 4);
-          let month = newUser.birthday.slice(5, 7);
-          let day = newUser.birthday.slice(8, 10);
-          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-          newUser.birthday = myDate.getTime();
+        console.log('vai passar isso pro updateUser', update);
 
-          year = newUser.entryDate.slice(0, 4);
-          month = newUser.entryDate.slice(5, 7);
-          day = newUser.entryDate.slice(8, 10);
-          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-          newUser.entryDate = myDate.getTime();
+        let ret = await AdminAPI.updateUser(update);
 
-          year = newUser.exitDate.slice(0, 4);
-          month = newUser.exitDate.slice(5, 7);
-          day = newUser.exitDate.slice(8, 10);
-          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-          newUser.exitDate = myDate.getTime();
-          console.log('birthday', newUser.exitDate);
-
-          let ret = await AdminAPI.createUser(newUser);
-          console.log('create user', ret);
-        }
+        console.log('update user', ret)
 
 
-        this.close()
-
+        this.close();
         this.initialize();
-      },
+      }
+      ,
 
       datePicker1(date) {
         this.$refs.menu1.save(date)
-      },
+      }
+      ,
 
       datePicker2(date) {
         this.$refs.menu2.save(date)
-      },
+      }
+      ,
 
       datePicker3(date) {
         this.$refs.menu3.save(date)
-      },
+      }
+      ,
 
 
       showChangePassword() {
         this.$refs.ChangePassword.open({});
         this.close();
-      },
+      }
+      ,
 
       showCreateUser() {
-        this.$refs.CreateUser.open(this.initialize.bind(this));
+        console.log('createUser')
+        this.$refs.CreateUser.open(this.initialize.bind(this), true);
 
-      },
+      }
+      ,
 
-      showEditUser() {
-        this.$refs.EditUser.open(this.initialize.bind(this));
+      showEditUser(item) {
+        console.log('editUser', item)
+        this.editedIndex = this.users.indexOf(item);
+        let update = {
+          id: item.id,
+          update: {
+            ...item
+          }
+        };
+        this.$refs.EditUser.open(this.initialize.bind(this), update);
+
         this.close;
-      },
-
-
-    },
+      }
+      ,
+    }
+    ,
   }
 </script>
 

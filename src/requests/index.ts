@@ -55,7 +55,6 @@ export interface paramsCdhConsult {
 }
 
 export interface updateUser {
-  Data: {
     id: string,
     update: {
       email?: string,
@@ -66,11 +65,10 @@ export interface updateUser {
       entryDate?: number,
       exitDate?: number,
     }
-  }
 }
 
 export interface justifyAbsence {
-  Data:{
+  update: {
     userId: string,
     currentTimeRegister: string,
     year: number,

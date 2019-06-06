@@ -6,178 +6,195 @@
   >
     <v-card>
       <v-card-title>
-        <span class="headline"> Novo Usuário </span>
+        <span class="headline white--text"> Editar Usuário </span>
       </v-card-title>
 
-      <v-divider
-        class="mx-8"
-      ></v-divider>
+      <v-divider class="mb-2"/>
 
-      <v-card-text>
-        <v-container grid-list-md>
-          <v-layout wrap>
-            <v-flex xs12 sm6 md6>
-              <v-text-field v-model="user.name" label="Nome"
-                            prepend-icon="person"></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6 md6>
-              <v-text-field v-model="user.surname" label="Sobrenome"
-                            prepend-icon="person"></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6 md6>
-              <v-text-field v-model="user.email" label="Email"
-                            prepend-icon="email"></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6 md6>
-              <v-text-field v-model="user.password" label="Senha"
-                            prepend-icon="vpn_key"></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6 md6>
-              <v-text-field v-model="user.cpf" label="CPF"
-                            prepend-icon="credit_card" mask="###-###-###-##"
-              ></v-text-field>
-            </v-flex>
+      <v-layout wrap align-center justify-center>
+        <v-flex xs12 sm6 md5>
+          <v-text-field v-model="user.name" label="Nome"
+                        class="mr-2"
+                        prepend-icon="person"></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm6 md5>
+          <v-text-field v-model="user.surname" label="Sobrenome"
+                        class="mr-2"
+                        prepend-icon="person"></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm6 md5>
+          <v-text-field v-model="user.email" label="Email"
+                        class="mr-2"
+                        prepend-icon="email"></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm6 md5>
+          <v-text-field v-model="user.password" label="Senha"
+                        class="mr-2"
+                        prepend-icon="vpn_key"
+                        type="password"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm6 md5>
+          <v-text-field v-model="user.cpf" label="CPF"
+                        class="mr-2"
+                        prepend-icon="credit_card" mask="###-###-###-##"
+          ></v-text-field>
+        </v-flex>
 
-            <v-flex xs3 sm3 md6>
-              <template>
-                <v-menu
-                  ref="menu3"
-                  v-model="menu3"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="user.birthday"
-                      label="Data de Nascimento"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    color="primary"
-                    ref="picker"
-                    v-model="user.birthday"
-                    :max="new Date().toISOString().substr(0, 10)"
-                    min="1980-01-01"
-                    @change="datePicker3"
-                  ></v-date-picker>
-                </v-menu>
+
+        <v-flex xs3 sm3 md5>
+          <template>
+            <v-menu
+              ref="menu3"
+              v-model="menu3"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="user.birthday"
+                  label="Data de Nascimento"
+                  prepend-icon="event"
+                  readonly
+                  v-on="on"
+                  class="mr-2"
+                ></v-text-field>
               </template>
-            </v-flex>
 
-            <v-flex xs3 sm3 md6>
-              <template>
-                <v-menu
-                  ref="menu1"
-                  v-model="menu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="user.entryDate"
-                      label="Data de Entrada"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    color="primary"
-                    ref="picker"
-                    v-model="user.entryDate"
-                    :max="new Date().toISOString().substr(0, 10)"
-                    min="1980-01-01"
-                    @change="datePicker1"
-                  ></v-date-picker>
-                </v-menu>
+              <v-date-picker
+                color="primary"
+                ref="picker"
+                v-model="date1"
+                :max="new Date().toISOString().substr(0, 10)"
+                min="1980-01-01"
+                @change="datePicker3"
+              ></v-date-picker>
+            </v-menu>
+          </template>
+        </v-flex>
+
+        <v-flex xs3 sm3 md5>
+          <template>
+            <v-menu
+              ref="menu1"
+              v-model="menu1"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="user.entryDate"
+                  label="Data de Entrada"
+                  prepend-icon="event"
+                  readonly
+                  v-on="on"
+                  class="mr-2"
+                ></v-text-field>
               </template>
-            </v-flex>
+              <v-date-picker
+                color="primary"
+                ref="picker"
+                v-model="date2"
+                :max="new Date().toISOString().substr(0, 10)"
+                min="1980-01-01"
+                @change="datePicker1"
+              ></v-date-picker>
+            </v-menu>
+          </template>
+        </v-flex>
 
-            <v-flex xs3 sm3 md6>
-              <template>
-                <v-menu
-                  ref="menu2"
-                  v-model="menu2"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="user.exitDate"
-                      label="Data de Saída"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    color="primary"
-                    ref="picker"
-                    v-model="user.exitDate"
-                    :max="new Date().toISOString().substr(0, 10)"
-                    min="1980-01-01"
-                    @change="datePicker2"
-                  ></v-date-picker>
-                </v-menu>
+        <v-flex xs3 sm3 md5>
+          <template>
+            <v-menu
+              ref="menu2"
+              v-model="menu2"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="user.exitDate"
+                  label="Data de Saída"
+                  prepend-icon="event"
+                  readonly
+                  v-on="on"
+                  class="mr-2"
+                ></v-text-field>
               </template>
-            </v-flex>
+              <v-date-picker
+                class="primary"
+                ref="picker"
+                v-model="date3"
+                :max="new Date().toISOString().substr(0, 10)"
+                min="1980-01-01"
+                @change="datePicker2"
+              ></v-date-picker>
+            </v-menu>
+          </template>
+        </v-flex>
 
-            <v-flex xs12 sm6 md4>
-              <v-switch color="primary" v-model="user.isAdm"
-                        label="Admin" value="isAdm"></v-switch>
-            </v-flex>
-
-          </v-layout>
-          <v-divider
-            class="mx-8"
-          ></v-divider>
-        </v-container>
-
-        <v-layout wrap>
-          <v-layout justify-end>
-            <v-btn justify-end align-end class="custom-btn"
-                   round outline small @click="close">Cancelar
-            </v-btn>
-
-            <v-btn justify-end align-end class="custom-btn"
-                   round outline small @click="save">Salvar
-            </v-btn>
-          </v-layout>
+        <v-layout justify-start>
+          <v-flex xs12 sm6 md4>
+            <v-switch color="primary" v-model="user.isAdm"
+                      label="Admin" value="isAdm"
+                      class="ml-5"
+            ></v-switch>
+          </v-flex>
         </v-layout>
-      </v-card-text>
+
+      </v-layout>
+
+      <v-divider class="mb-3"/>
+      <v-layout wrap>
+        <v-layout justify-end>
+          <v-btn justify-end align-end class="custom-btn mb-3"
+                 round outline small @click="close">Cancelar
+          </v-btn>
+
+          <v-btn justify-end align-end class="custom-btn mb-3 mr-3"
+                 round outline small @click="save">Salvar
+          </v-btn>
+        </v-layout>
+      </v-layout>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-  export default {
-    name: "EditUser",
+  import {
+    AdminAPI,
+  } from '../requests';
+  import UsersBurgo from "../views/Users";
 
-    comments: {},
+
+  export default {
     data: () => ({
-      date: null,
+      date1: '',
+      date2: '',
+      date3: '',
       menu1: false,
       menu2: false,
       menu3: false,
       dialog: false,
+      updateTable: null,
+      createUser: true,
+
+      name: "EditUser",
 
       user: {
         name: '',
@@ -192,7 +209,21 @@
       }
     }),
 
+
     watch: {
+      date1(val) {
+        this.user.birthday = this.formatDate(this.date1);
+      },
+
+      date2(val) {
+        this.user.entryDate = this.formatDate(this.date2);
+      },
+
+      date3(val) {
+        this.user.exitDate = this.formatDate(this.date3);
+      },
+
+
       menu1(val) {
         val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
       },
@@ -209,6 +240,20 @@
     },
 
     methods: {
+      open(fn, data) {
+        this.user = {
+
+          ...data.update
+        };
+
+        console.log(this.user.birthday);
+        console.log(this.user.exitDate);
+        console.log(this.user.entryDate);
+
+        this.dialog = true;
+        this.updateTable = fn;
+      },
+
       close() {
         this.dialog = false
       },
@@ -216,53 +261,84 @@
 
       async save() {
         let myDate = new Date();
-        let newUser = {
-          ...this.user
+        let update = {
+          id: this.user.id,
+          update: {
+            ...this.user
+          }
         };
 
+        update.update.birthday = this.date1;
+        update.update.entryDate = this.date2;
+        update.update.exitDate = this.date3;
+
+        console.log('update ve se deu boa', update)
+
         // //formata data de string pra timeStamp
-        let year = newUser.birthday.slice(0, 4);
-        let month = newUser.birthday.slice(5, 7);
-        let day = newUser.birthday.slice(8, 10);
+        let year = update.update.birthday.slice(0, 4);
+        let month = update.update.birthday.slice(5, 7);
+        let day = update.update.birthday.slice(8, 10);
         myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-        newUser.birthday = myDate.getTime();
-
-        year = newUser.entryDate.slice(0, 4);
-        month = newUser.entryDate.slice(5, 7);
-        day = newUser.entryDate.slice(8, 10);
-        myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-        newUser.entryDate = myDate.getTime();
-
-        year = newUser.exitDate.slice(0, 4);
-        month = newUser.exitDate.slice(5, 7);
-        day = newUser.exitDate.slice(8, 10);
-        myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-        newUser.exitDate = myDate.getTime();
-        console.log('birthday', newUser.exitDate);
-
-        let ret = await AdminAPI.createUser(newUser);
-        console.log('create user', ret);
+        update.update.birthday = myDate.getTime();
 
 
+        if (update.update.entryDate) {
+          year = update.update.entryDate.slice(0, 4);
+          month = update.update.entryDate.slice(5, 7);
+          day = update.update.entryDate.slice(8, 10);
+          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
+          update.update.entryDate = myDate.getTime();
+        }
+
+        if (update.update.exitDate) {
+          year = update.update.exitDate.slice(0, 4);
+          month = update.update.exitDate.slice(5, 7);
+          day = update.update.exitDate.slice(8, 10);
+          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
+          update.update.exitDate = myDate.getTime();
+        }
+
+        console.log('new user passou pelos timestamp mandando pro editUser');
+
+        let ret = await AdminAPI.updateUser(update);
+        console.log('update user', ret);
+
+        this.user = {};
+        this.updateTable();
         this.close();
-        this.$refs.Users.initialize();
-      },
+      }
+      ,
 
       datePicker1(date) {
         this.$refs.menu1.save(date)
-      },
+      }
+      ,
 
       datePicker2(date) {
         this.$refs.menu2.save(date)
-      },
+      }
+      ,
 
       datePicker3(date) {
         this.$refs.menu3.save(date)
-      },
+      }
+      ,
 
-      open() {
-        this.dialog = true;
-      },
+      showChangePassword() {
+        this.$refs.ChangePassword.open({});
+        this.close();
+      }
+      ,
+
+      formatDate(date) {
+        if (!date) return null
+
+        const [year, month, day] = date.split('-')
+        return `${day}/${month}/${year}`
+
+      }
+
+
     }
   }
 </script>

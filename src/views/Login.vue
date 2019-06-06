@@ -9,6 +9,7 @@
             placeholder="Username"
             required
             prepend-inner-icon="person"
+            @keyup.enter.native="login"
           ></v-text-field>
 
 
@@ -21,6 +22,7 @@
             counter
             @click:append="show1 = !show1"
             prepend-inner-icon="vpn_key"
+            @keyup.enter.native="login"
           ></v-text-field>
         </v-card-text>
 
@@ -56,6 +58,7 @@
   @Component({
     components: {},
   })
+
   export default {
 
     data() {
@@ -69,34 +72,40 @@
     },
 
     methods: {
+
+      onEnter: function() {
+        alert('teste')
+      },
+
+
+
       async login() {
 
-        if (localStorage.getItem('sessionOpen') === 'true') {
-          localStorage.clear();
+        if (localStorage.getItem('sessionOpen') === 'true')
           localStorage.setItem('sessionOpen', 'true')
-        } else {
-          localStorage.clear();
 
+
+          let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
+          console.log('login', ret)
+
+          if (ret.success) {
+            localStorage.setItem('authenticationKey', ret.data.authenticationKey);
+            localStorage.setItem('accessKey', ret.data.accessKey);
+            localStorage.setItem('id', ret.data.id);
+            localStorage.setItem('name', ret.data.name)
+
+            ret.data.isAdm ?
+              (this.$router.replace('/AdminCDH'), localStorage.setItem('isAdm', 'true'), sessionStorage.setItem('adminCDH', 'true'))  :
+              (this.$router.replace('/UserCDH'), localStorage.removeItem('isAdm'));
+
+
+            // console.log(this.App.isAdm = true);
+
+          }
         }
-
-
-        let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
-        console.log('login', ret)
-
-        if (ret.success) {
-          localStorage.setItem('authenticationKey', ret.data.authenticationKey);
-          localStorage.setItem('accessKey', ret.data.accessKey);
-          localStorage.setItem('id', ret.data.id);
-          localStorage.setItem('name', ret.data.name)
-
-          ret.data.isAdm ?
-            (this.$router.replace('/AdminCDH'), localStorage.setItem('isAdm', 'true')) :
-            (this.$router.replace('/UserCDH'), localStorage.setItem('isAdm', 'false'));
-
-        }
-      },
+      ,
+      }
     }
-  }
 </script>
 
 <style>
