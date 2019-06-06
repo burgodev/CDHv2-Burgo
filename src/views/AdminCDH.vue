@@ -203,7 +203,7 @@
         // if (localStorage.getItem('sessionOpen') == "true") {
         //   this.selected = true;
         // }
-      },
+      }, //aa
 
       showJustifyAbsence(item) {
         console.log('objeto', this.selectUser.id)
