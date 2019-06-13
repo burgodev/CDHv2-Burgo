@@ -19,8 +19,10 @@
             vertical
           ></v-divider>
 
+
           <v-flex xs6 sm6 md4 d-flex>
             <v-select
+              class="mt-3"
               v-model="selectUser"
               return-object
               :items="users"
@@ -28,16 +30,20 @@
               item-text="name"
               item-value="id"
               label="Usuário"
-
             ></v-select>
           </v-flex>
+
 
           <v-spacer></v-spacer>
 
           <v-flex xs6 sm6 md2 d-flex>
             <v-select
-              :items="month"
+              class="mt-3"
               v-model="selectedMonth"
+              return-object
+              :items="month"
+              item-text="Text"
+              item-value="Number"
               @change="adminCdhSearch"
               label="Mês"
             ></v-select>
@@ -47,6 +53,7 @@
 
           <v-flex xs6 sm6 md2 d-flex>
             <v-select
+              class="mt-3"
               :items="year"
               v-model="selectedYear"
               @change="adminCdhSearch"
@@ -64,9 +71,7 @@
           ></v-divider>
 
 
-          <v-layout justify-end align-end>
-
-
+          <v-layout justify-end align-end class="mt-1">
             <v-tooltip color="primary" bottom>
               <template v-slot:activator="{ on }">
                 <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
@@ -151,6 +156,7 @@
       selectedYear: null,
       selected: false,
       editedIndex: -1,
+
       headers: [
 
         {text: 'Dia', value: 'day', align: 'center'},
@@ -164,8 +170,58 @@
       timeRegister: [],
       users: [],
       usersIndex: -1,
-      month: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      month: [
+        {
+          Text: 'Janeiro',
+          Value: 0
+        },
+        {
+          Text: 'Fevereiro',
+          Value: 1
+        },
+        {
+          Text: 'Março',
+          Value: 2
+        },
+        {
+          Text: 'Abril',
+          Value: 3
+        },
+        {
+          Text: 'Maio',
+          Value: 4
+        },
+        {
+          Text: 'Junho',
+          Value: 5
+        },
+        {
+          Text: 'Julho',
+          Value: 6
+        },
+        {
+          Text: 'Agosto',
+          Value: 7
+        },
+        {
+          Text: 'Setembro',
+          Value: 8
+        },
+        {
+          Text: 'Outubro',
+          Value: 9
+        },
+        {
+          Text: 'Novembro',
+          Value: 10
+        },
+
+        {
+          Text: 'Dezembro',
+          Value: 11
+        },
+      ],
+
       year: []
 
     }),
@@ -178,92 +234,72 @@
 
     computed: {
       sessionButton() {
+        let myDate = new Date();
+
         if (this.selected) return 'primary';
-      },
+
+        // if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()) {
+        //   this.selected = true
+        // }
+      }
     },
 
     methods: {
       async initialize() {
         let myDate = new Date();
+        this.selectedMonth = this.month[myDate.getMonth()];
+
+        for (let i = 0; i < this.users.length; i++) {
+          if (this.users[i].name === localStorage.getItem('name'))
+            this.selectUser = this.users[i];
+        }
+        ;
 
 
+        this.getUser();
         this.adminCdhSearch();
         this.getCdhYears();
-        this.getUser();
 
-        if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()){
+
+        this.selectedYear = myDate.getFullYear();
+
+        if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()) {
           this.selected = true
-        }
-        else{
+        } else {
           this.selected = false;
           sessionStorage.setItem('lastDay', String(myDate.getDate()));
+          console.log('caiu aqui1', sessionStorage.getItem('lastDay'))
         }
-
-
-        // if (localStorage.getItem('sessionOpen') == "true") {
-        //   this.selected = true;
-        // }
-      }, //aa
+      }
+      ,
 
       showJustifyAbsence(item) {
-        console.log('objeto', this.selectUser.id)
-        console.log('objeto', this.selectUser.currentTimeRegister)
-
-//nao ta funcionante ainda, nao ta retroando currentTimeRegsiter de um dos usuarios. verificar isso e aprincipio ta d bobs
-
-        let index = this.users.indexOf(item);
-        console.log('index', index)
-        console.log(this.users)
-
-        // console.log(this.timeRegister[0]);
-        // let month = localStorage.getItem('month');
-        // let year = localStorage.getItem('year');
-        // let id = localStorage.getItem('id');
-        // let currentTimeRegister = localStorage.getItem('currentTimeRegister');
-
-        console.log(this.users[this.editedIndex]);
-
         let data = {
           day: item.day,
-          month: localStorage.getItem('month'),
-          year: localStorage.getItem('year'),
-          // userId: this.users[index].id,
-          // currentTimeRegister: this.users[index].currentTimeRegister
+          month: Number(localStorage.getItem('month')),
+          year: Number(localStorage.getItem('year')),
+          userId: this.selectUser.id,
+          currentTimeRegister: this.selectUser.currentTimeRegister
         };
+        console.log('data', data)
 
         this.$refs.JustifyAbsence.open(data)
-
-
-        // console.log('day', item.day, 'month', month, 'year', year, 'id', id, 'currentTimeRegister', currentTimeRegister)
-        // console.log(this.timeRegister.day);
       },
 
       async sessionControl() {
-        // let id = await localStorage.getItem('id');
-
         if (!this.selected) {
           this.$refs.ExpectedExit.open(this.initialize.bind(this));
-          localStorage.setItem("sessionOpen", "true");
         } else {
           this.$refs.EndSessionConfirmation.open(this.initialize.bind(this));
-
-          // let ret = await UserAPI.exit(id);
-          // localStorage.setItem("sessionOpen", "false");
-          // console.log('exit', ret);
         }
       },
-
 
       async adminCdhSearch() {
         let date = new Date();
         let month, year;
         let id;
+        month = this.selectedMonth.Value;
 
-        if (this.selectedMonth) {
-          month = this.getCdhMonths();
-        } else {
-          month = date.getMonth();
-        }
 
         if (this.selectedYear) {
           year = this.selectedYear
@@ -287,66 +323,74 @@
 
         //Alimenta a table
         let cdh = [];
+
+
+
         if (ret.data.length) {
           let myDate = new Date();
 
           //percorre cada sessao dentro de cada dia
           for (let i = 0; i < ret.data[0].days.length; i++) {
-            for (let x = 0; x < ret.data[0].days[0].entryExit.length; x++) {
-              myDate.setTime(ret.data[0].days[0].entryExit[x].entry);
+            for (let x = 0; x < ret.data[0].days[i].entryExit.length; x++) {
+              myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
               let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-              myDate.setTime(ret.data[0].days[0].entryExit[x].exit);
+              myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
               let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              myDate.setTime(ret.data[0].days[i].timeWorked);
+
+
+              let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
+
+              let h = 0;
+              while(formatedTimeWorked > 60){
+                h++
+                formatedTimeWorked - 60;
+              }
+
+              formatedTimeWorked = `${addZero(h)} : ${formatedTimeWorked}`;
 
               if (formatedExit == "NaN:NaN:NaN")
                 formatedExit = "";
 
               cdh.push({
-                day: ret.data[0].days[0].day,
+                day: ret.data[0].days[i].day,
                 entry: formatedEntry,
                 exit: formatedExit,
-                timeWorked: ret.data[0].days[0].timeWorked
+                timeWorked: formatedTimeWorked ,
+                // timeWorked: ret.data[0].days[i].timeWorked ,
+                justification: ret.data[0].days[i].justification
+
               });
 
-              let lastDay = ret.data[0].days[0].day;
-              sessionStorage.setItem('lastDay', lastDay)
+              // let lastDay = ret.data[0].days[i].day;
+              // sessionStorage.setItem('lastDay', lastDay)
             }
           }
 
         }
         this.timeRegister = cdh;
-      },
+      }
+      ,
 
       async getUser() {
         let ret = await AdminAPI.readAllUsers();
-        console.log('getUser', ret);
+        console.log('getUser', ret)
 
         if (ret.success) {
           this.users = ret.data;
-          // console.log(this.users[0].id)
-
 
           for (let i = 0; i < this.users.length; i++) {
             if (this.users[i].id === localStorage.getItem('id')) {
               localStorage.setItem('currentTimeRegister', this.users[i].currentTimeRegister)
             }
           }
-          // console.log('id', id, 'currentTimeRegister', localStorage.getItem('currentTimeRegister'))
+          for (let i = 0; i < this.users.length; i++) {
+            if (this.users[i].name === localStorage.getItem('name'))
+              this.selectUser = this.users[i];
+          }
+          ;
 
-          // console.log('this.users', this.users)
-
-
-          //TALVEZ BUGE COM ISSO COMENTADO, VAMO VE ->
-          //   let admin = {
-          //     name:
-          //       localStorage.getItem('name'),
-          //     id:
-          //       localStorage.getItem('id')
-          //   };
-          //   this.users.push(admin)
         }
-
-
       },
 
       async getCdhYears() {
@@ -358,37 +402,6 @@
           this.year.push(year);
 
           year -= 1;
-        }
-      },
-
-      getCdhMonths() {
-
-        switch (this.selectedMonth) {
-          case 'Janeiro':
-            return 0;
-          case 'Fevereiro':
-            return 1;
-          case 'Março':
-            return 2;
-          case 'Abril':
-            return 3;
-          case 'Maio':
-            return 4;
-          case 'Junho':
-            return 5;
-          case 'Julho':
-            return 6;
-          case 'Agosto':
-            return 7;
-          case 'Setembro':
-            return 8;
-          case 'Outubro':
-            return 9;
-          case 'Novembro':
-            return 10;
-          case 'Dezembro':
-            return 11;
-
         }
       },
 

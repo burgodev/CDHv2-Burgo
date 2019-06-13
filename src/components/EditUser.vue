@@ -151,7 +151,7 @@
         <v-layout justify-start>
           <v-flex xs12 sm6 md4>
             <v-switch color="primary" v-model="user.isAdm"
-                      label="Admin" value="isAdm"
+                      label="Admin"
                       class="ml-5"
             ></v-switch>
           </v-flex>
@@ -159,14 +159,14 @@
 
       </v-layout>
 
-      <v-divider class="mb-3"/>
+      <v-divider class="mb-2"/>
       <v-layout wrap>
         <v-layout justify-end>
-          <v-btn justify-end align-end class="custom-btn mb-3"
+          <v-btn justify-end align-end class="custom-btn mb-2"
                  round outline small @click="close">Cancelar
           </v-btn>
 
-          <v-btn justify-end align-end class="custom-btn mb-3 mr-3"
+          <v-btn justify-end align-end class="custom-btn mb-2 mr-3"
                  round outline small @click="save">Salvar
           </v-btn>
         </v-layout>
@@ -183,31 +183,31 @@
 
 
   export default {
-    data: () => ({
-      date1: '',
-      date2: '',
-      date3: '',
-      menu1: false,
-      menu2: false,
-      menu3: false,
-      dialog: false,
-      updateTable: null,
-      createUser: true,
+    data() {
+      return {
+        name: "EditUser",
+        date1: '',
+        date2: '',
+        date3: '',
+        menu1: false,
+        menu2: false,
+        menu3: false,
+        dialog: false,
+        updateTable: null,
 
-      name: "EditUser",
-
-      user: {
-        name: '',
-        surname: '',
-        email: '',
-        cpf: '',
-        entryDate: '',
-        exitDate: '',
-        password: '',
-        birthday: '',
-        isAdm: false
+        user: {
+          name: '',
+          surname: '',
+          email: '',
+          cpf: '',
+          entryDate: '',
+          exitDate: '',
+          password: '',
+          birthday: '',
+          isAdm: ''
+        }
       }
-    }),
+    },
 
 
     watch: {
@@ -242,13 +242,8 @@
     methods: {
       open(fn, data) {
         this.user = {
-
           ...data.update
         };
-
-        console.log(this.user.birthday);
-        console.log(this.user.exitDate);
-        console.log(this.user.entryDate);
 
         this.dialog = true;
         this.updateTable = fn;
@@ -258,9 +253,10 @@
         this.dialog = false
       },
 
-
       async save() {
         let myDate = new Date();
+        let year, month, day;
+
         let update = {
           id: this.user.id,
           update: {
@@ -272,14 +268,16 @@
         update.update.entryDate = this.date2;
         update.update.exitDate = this.date3;
 
-        console.log('update ve se deu boa', update)
 
         // //formata data de string pra timeStamp
-        let year = update.update.birthday.slice(0, 4);
-        let month = update.update.birthday.slice(5, 7);
-        let day = update.update.birthday.slice(8, 10);
-        myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
-        update.update.birthday = myDate.getTime();
+
+        if (update.update.birthday) {
+          year = update.update.birthday.slice(0, 4);
+          month = update.update.birthday.slice(5, 7);
+          day = update.update.birthday.slice(8, 10);
+          myDate.setFullYear(Number(year), Number(month) - 1, Number(day));
+          update.update.birthday = myDate.getTime();
+        }
 
 
         if (update.update.entryDate) {
@@ -298,7 +296,8 @@
           update.update.exitDate = myDate.getTime();
         }
 
-        console.log('new user passou pelos timestamp mandando pro editUser');
+        console.log('update', update)
+
 
         let ret = await AdminAPI.updateUser(update);
         console.log('update user', ret);

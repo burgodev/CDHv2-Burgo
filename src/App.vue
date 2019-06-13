@@ -1,14 +1,13 @@
 <template>
   <v-app id="app2" dark>
 
-    <v-toolbar app fixed clipped-left v-if="isLogged" dark>
+    <v-toolbar
+      app fixed clipped-left v-if="isLogged" dark>
 
 
       <v-layout wrap justify-end>
 
-
         <v-toolbar-title class="white--text"></v-toolbar-title>
-
 
         <v-spacer></v-spacer>
         <v-tooltip color="primary" bottom>
@@ -56,7 +55,7 @@
 
 
     <v-footer app fixed dark>
-      <span>&copy; 2019</span>
+      <span>&copy; by Burgodev</span>
 
 
     </v-footer>
@@ -88,52 +87,48 @@
       },
     }),
 
+
     computed: {
       selectedButtonCdh() {
         if (this.selectedButtonColorCdh) return 'primary';
-        else {
-          if (sessionStorage.getItem('adminCDH') === 'true') {
-            sessionStorage.removeItem('adminCDH')
-            this.selectedButtonColorCdh = true;
-            return 'primary'
 
-          }
-        }
+        if (this.$route.path === '/AdminCDH')
+          return 'primary';
       },
 
       selectedButtonUser() {
         if (this.selectedButtonColorUser) return 'primary';
 
+        if (this.$route.path === '/Users')
+          return 'primary';
       },
 
       isLogged() {
         return this.$route.path !== '/login'
-      }
+      },
     },
 
     methods: {
       async logout() {
         let ret = await UserAPI.logout();
         console.log('logout', ret);
-        // localStorage.setItem('isAdm', 'false');
 
-        // localStorage.setItem('isLogged', 'false');
-
-        this.$router.replace('/login');
-        this.selectedButtonColorCdh = false;
+        this.selectedButtonColorCdh = true;
         this.selectedButtonColorUser = false;
+        this.$router.replace('/login');
       },
 
       showUsers() {
-        this.$router.replace('/Users');
-        this.selectedButtonColorUser = !this.selectedButtonColorUser;
         this.selectedButtonColorCdh = false;
+        this.selectedButtonColorUser = true;
+        this.$router.replace('/Users');
       },
 
       showCdh() {
-        this.$router.replace('/AdminCDH');
-        this.selectedButtonColorCdh = !this.selectedButtonColorCdh;
+        console.log('teste')
+        this.selectedButtonColorCdh = true;
         this.selectedButtonColorUser = false;
+        this.$router.replace('/AdminCDH');
 
       },
 

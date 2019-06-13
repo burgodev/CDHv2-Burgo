@@ -143,6 +143,8 @@
       open(data) {
         this.dialog = true;
         this.data = data;
+
+        console.log(data);
       },
 
       cancel() {

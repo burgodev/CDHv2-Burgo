@@ -105,8 +105,14 @@
 
         let expectedExit = date.getTime();
 
+        console.log(id);
+
         let ret = await UserAPI.entry(id, expectedExit);
         console.log('expectedExit', ret);
+
+        if (ret.success) {
+          localStorage.setItem("sessionOpen", "true");
+        }
 
 
         this.$refs.SessionConfirmation.open();

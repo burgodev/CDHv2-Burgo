@@ -57,7 +57,7 @@ export class adminRequests {
     }
   }
 
-  // public async updateUser(update: updateUser){
+
   public async updateUser(update: any) {
     try {
       console.log('update dentro da função request', update)
@@ -103,4 +103,6 @@ export class adminRequests {
       return e;
     }
   }
+
+
 }

@@ -13,16 +13,16 @@
           FALA DEV!
         </v-card-title>
 
-        <v-divider
-        ></v-divider>
+        <v-divider/>
+
 
         <v-card-text class="white--text" >
           Ô mô quiridu, tais vazante mesmo ou viajasse???
         </v-card-text>
 
-        <v-divider
-          class="mx-3"
-        ></v-divider>
+        <v-divider/>
+
+
 
         <v-card-actions>
           <v-spacer></v-spacer>

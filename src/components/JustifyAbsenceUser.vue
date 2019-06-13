@@ -25,8 +25,6 @@
               </v-flex>
             </v-layout>
           </v-container>
-
-
         </v-form>
       </v-card>
     </v-dialog>
@@ -49,7 +47,6 @@
     methods: {
 
       open(data) {
-        console.log(data)
         this.dialog = true;
         this.data = data;
       },

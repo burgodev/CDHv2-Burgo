@@ -20,35 +20,47 @@
             vertical
           ></v-divider>
 
-          <h3 class="font-weight-light.font-italic mr-2 white--text"> {{selectUser}} </h3>
-          <h3 class="font-weight-light.font-italic white--text"> - {{workTimeLeft}} horas restantes </h3>
+
+          <v-flex xs4 sm4 md4 d-flex>
+            <v-select
+              class="mt-3"
+              v-model="selectUser"
+              disabled
+              return-object
+              :items="users"
+              label="Usuário"
+              item-text="name"
+              item-value="id"
+            ></v-select>
+          </v-flex>
+
 
           <v-spacer></v-spacer>
 
+          <v-flex xs2 sm2 md2 d-flex>
+            <v-select
+              class="mt-3"
+              v-model="selectedMonth"
+              return-object
+              :items="month"
+              item-text="Text"
+              item-value="Number"
+              @change="userCdhSearch"
+              label="Mês"
+            ></v-select>
+          </v-flex>
 
-          <v-layout wrap justify-end>
-            <v-flex md4 mr-2>
-              <v-select
-                v-model="selectedMonth"
-                :items="month"
-                @change="userCdhSearch"
-                placeholder="Mês"
-                class="custom-btn "
-                dark
-              ></v-select>
-            </v-flex>
+          <v-spacer></v-spacer>
 
-            <v-flex md4>
-              <v-select
-                class="custom-btn primary--text"
-                v-model="selectedYear"
-                :items="year"
-                @change="userCdhSearch"
-                placeholder="Ano"
-                dark
-              ></v-select>
-            </v-flex>
-          </v-layout>
+          <v-flex xs2 sm2 md2 d-flex class="mr-3">
+            <v-select
+              class="mt-3"
+              :items="year"
+              v-model="selectedYear"
+              @change="userCdhSearch"
+              label="Ano"
+            ></v-select>
+          </v-flex>
 
 
           <v-divider
@@ -60,7 +72,7 @@
 
           <v-tooltip color="primary" bottom>
             <template v-slot:activator="{ on }">
-              <v-btn round outline small :color="sessionButton" class="custom-btn" @click="sessionControl"
+              <v-btn round outline small :color="sessionButton" class="custom-btn mt-3" @click="sessionControl"
                      v-on="on">
                 <v-icon class="custom-btn">power_settings_new</v-icon>
               </v-btn>
@@ -117,9 +129,9 @@
   import ExpectedExit from "../components/ExpectedExit";
   import EndSessionConfirmation from "../components/EndSessionConfirmation";
   import {
-    UserAPI
+    UserAPI,
+    AdminAPI
   } from '../requests';
-
 
 
   function addZero(i) {
@@ -134,7 +146,7 @@
     components: {ExpectedExit, JustifyAbsenceUser, EndSessionConfirmation},
 
     data: () => ({
-      selectUser: '',
+      selectUser: 'teste',
       selectedMonth: null,
       selectedYear: null,
       selected: false,
@@ -150,9 +162,59 @@
 
       ],
       timeRegister: [],
-      user: [],
-      month: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      users: [],
+      month: [
+        {
+          Text: 'Janeiro',
+          Value: 0
+        },
+        {
+          Text: 'Fevereiro',
+          Value: 1
+        },
+        {
+          Text: 'Março',
+          Value: 2
+        },
+        {
+          Text: 'Abril',
+          Value: 3
+        },
+        {
+          Text: 'Maio',
+          Value: 4
+        },
+        {
+          Text: 'Junho',
+          Value: 5
+        },
+        {
+          Text: 'Julho',
+          Value: 6
+        },
+        {
+          Text: 'Agosto',
+          Value: 7
+        },
+        {
+          Text: 'Setembro',
+          Value: 8
+        },
+        {
+          Text: 'Outubro',
+          Value: 9
+        },
+        {
+          Text: 'Novembro',
+          Value: 10
+        },
+
+        {
+          Text: 'Dezembro',
+          Value: 11
+        },
+      ],
+
       year: []
 
     }),
@@ -165,19 +227,37 @@
 
     computed: {
       sessionButton() {
+        let myDate = new Date();
+
         if (this.selected) return 'primary';
+
+        if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()) {
+          return 'primary';
+        }
       }
+
 
     },
 
     methods: {
       async initialize() {
         let myDate = new Date();
+        this.selectedMonth = this.month[myDate.getMonth()];
+
+        this.users = [{
+          name: localStorage.getItem('name'),
+          id: localStorage.getItem('id')
+        }];
+
+
+
+        this.selectUser = this.users[0];
 
         this.userCdhSearch();
-        this.getUser();
         this.getCdhYears();
+        // this.getUser();
 
+        this.selectedYear = myDate.getFullYear();
 
         if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()) {
           this.selected = true
@@ -189,19 +269,13 @@
       },
 
       hasJustification(data) {
-        console.log(data.justification);
-
-        if (data.justification) {
-          console.log('entrou no if')
-          return false;
+        if (!data.justification) {
+          return true;
         }
-
-
       },
 
 
       showJustifyAbsenceUser(data) {
-        console.log('caiu no showJustify', data);
 
         if (data.justification) {
           this.$refs.JustifyAbsenceUser.open(data)
@@ -211,36 +285,18 @@
       },
 
       async sessionControl() {
-        // this.selected = !this.selected;
-        // let id = await localStorage.getItem('id');
-        //
-        // if (this.selected) {
-        //   this.$refs.ExpectedExit.open(this.initialize.bind(this));
-        //   localStorage.setItem("sessionOpen", "true");
-        // } else {
-        //   let ret = await UserAPI.exit(id);
-        //   localStorage.setItem("sessionOpen", "false");
-        //   console.log('exit', ret);
-
         if (!this.selected) {
           this.$refs.ExpectedExit.open(this.initialize.bind(this));
-          localStorage.setItem("sessionOpen", "true");
         } else {
           this.$refs.EndSessionConfirmation.open(this.initialize.bind(this));
         }
-
-        // this.initialize();
       },
 
       async userCdhSearch() {
         let date = new Date();
         let month, year;
-
-        if (this.selectedMonth) {
-          month = this.getCdhMonths();
-        } else {
-          month = date.getMonth();
-        }
+        let id;
+        month = this.selectedMonth.Value;
 
         if (this.selectedYear) {
           year = this.selectedYear
@@ -248,19 +304,19 @@
           year = date.getFullYear();
         }
 
-        let id = localStorage.getItem('id');
+        localStorage.setItem('month', month);
+        localStorage.setItem('year', year);
+
+        if (!this.selectUser) {
+          id = localStorage.getItem('id');
+        } else {
+          id = this.selectUser.id;
+        };
+
+
         let ret = await UserAPI.userCdhConsult(id, month, year);
         console.log('userCdhConsult', ret);
 
-        let workTimeLeft = new Date();
-
-        if (ret.data.length != 0) {
-          workTimeLeft.setTime(ret.data[0].workTimeLeft);
-
-        } else {
-          workTimeLeft.setHours(80);
-
-        }
 
         //Alimenta a table
         let cdh = [];
@@ -269,40 +325,63 @@
 
           //percorre cada sessao dentro de cada dia
           for (let i = 0; i < ret.data[0].days.length; i++) {
-            for (let x = 0; x < ret.data[0].days[0].entryExit.length; x++) {
-              myDate.setTime(ret.data[0].days[0].entryExit[x].entry);
+            for (let x = 0; x < ret.data[0].days[i].entryExit.length; x++) {
+              myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
               let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-              myDate.setTime(ret.data[0].days[0].entryExit[x].exit);
+              myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
               let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              myDate.setTime(ret.data[0].days[i].timeWorked);
+
+
+              let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
+
+              let h = 0;
+              while(formatedTimeWorked > 60){
+                h++
+                formatedTimeWorked - 60;
+              }
+
+              formatedTimeWorked = `${addZero(h)} : ${formatedTimeWorked}`;
+
+
 
               if (formatedExit == "NaN:NaN:NaN")
                 formatedExit = "";
 
               cdh.push({
-                day: ret.data[0].days[0].day,
+                day: ret.data[0].days[i].day,
                 entry: formatedEntry,
                 exit: formatedExit,
-                timeWorked: ret.data[0].days[0].timeWorked,
-                justification: ret.data[0].days[0].justification
+                // timeWorked: (ret.data[0].days[i].timeWorked / 3600 / 1000),
+                timeWorked: formatedTimeWorked,
+                justification: ret.data[0].days[i].justification
               });
+
+              // let lastDay = ret.data[0].days[0].day;
+              // sessionStorage.setItem('lastDay', lastDay)
             }
           }
         }
         this.timeRegister = cdh;
-
-
-        // if (localStorage.getItem('sessionOpen') == "true") {
-        //   this.selected = true;
-        // }
       },
 
-      getUser() {
-        let user = [];
-        user.push(localStorage.getItem('name'));
 
-        this.user = user;
+      // async getUser() {
+      //   let ret = await AdminAPI.readAllUsers();
+      //   console.log('getUser', ret)
+      //
+      //   if (ret.success) {
+      //     this.users = ret.data;
+      //
+      //     for (let i = 0; i < this.users.length; i++) {
+      //       if (this.users[i].id === localStorage.getItem('id')) {
+      //         localStorage.setItem('currentTimeRegister', this.users[i].currentTimeRegister)
+      //       }
+      //     }
+      //     this.selectUser = this.users[0];
+      //   }
+      // },
 
-      },
 
       getCdhYears() {
         let myDate = new Date();
@@ -314,38 +393,6 @@
           year -= 1;
         }
       },
-
-      getCdhMonths() {
-
-        switch (this.selectedMonth) {
-          case 'Janeiro':
-            return 0;
-          case 'Fevereiro':
-            return 1;
-          case 'Março':
-            return 2;
-          case 'Abril':
-            return 3;
-          case 'Maio':
-            return 4;
-          case 'Junho':
-            return 5;
-          case 'Julho':
-            return 6;
-          case 'Agosto':
-            return 7;
-          case 'Setembro':
-            return 8;
-          case 'Outubro':
-            return 9;
-          case 'Novembro':
-            return 10;
-          case 'Dezembro':
-            return 11;
-        }
-      },
-
-
     }
   }
 

@@ -160,16 +160,16 @@
 
       </v-layout>
 
-      <v-divider class="mb-3"/>
+      <v-divider class="mb-2"/>
 
 
       <v-layout wrap>
         <v-layout justify-end>
-          <v-btn justify-end align-end class="custom-btn mb-3"
+          <v-btn justify-end align-end class="custom-btn mb-2"
                  round outline small @click="close">Cancelar
           </v-btn>
 
-          <v-btn justify-end align-end class="custom-btn mb-3 mr-3"
+          <v-btn justify-end align-end class="custom-btn mb-2 mr-3"
                  round outline small @click="save">Salvar
           </v-btn>
         </v-layout>

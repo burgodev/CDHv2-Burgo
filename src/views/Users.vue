@@ -21,6 +21,7 @@
 
           <v-flex xs3 sm3 md9>
             <v-text-field
+              class="mt-2"
               v-model="search"
               append-icon="search"
               label="Search"
@@ -266,6 +267,7 @@
         <ChangePassword ref="ChangePassword"/>
         <CreateUser ref="CreateUser"/>
         <EditUser ref="EditUser"/>
+        <DeleteUser ref="DeleteUser"/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -274,10 +276,9 @@
 <script>
   import ChangePassword from "../components/ChangePassword";
   import CreateUser from "../components/CreateUser";
-  import {
-    AdminAPI,
-  } from '../requests';
+  import {AdminAPI} from '../requests';
   import EditUser from "../components/EditUser";
+  import DeleteUser from "../components/DeleteUser";
 
   function addZero(i) {
     if (i < 10) {
@@ -288,7 +289,7 @@
 
   export default {
     name: "UsersBurgo",
-    components: {EditUser, ChangePassword, CreateUser},
+    components: {EditUser, ChangePassword, CreateUser, DeleteUser},
 
     data: () => ({
       date: null,
@@ -415,13 +416,19 @@
       async deleteItem(item) {
         const index = this.users.indexOf(item);
 
-        if (window.confirm('Are you sure you want to delete this item?')) {
+        // if (window.confirm('Are you sure you want to delete this item?')) {
+        //
+        //   let ret = await AdminAPI.deleteUser(this.users[index].id);
+        //   console.log('delete', ret);
+        // }
 
-          let ret = await AdminAPI.deleteUser(this.users[index].id);
-          console.log('delete', ret);
-        }
+        this.$refs.DeleteUser.open(this.users[index].id, this.initialize.bind(this));
 
-        this.initialize();
+
+
+
+
+        // this.initialize();
       }
       ,
 
@@ -488,7 +495,6 @@
       ,
 
       showEditUser(item) {
-        console.log('editUser', item)
         this.editedIndex = this.users.indexOf(item);
         let update = {
           id: item.id,
