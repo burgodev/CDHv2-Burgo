@@ -327,9 +327,9 @@
           for (let i = 0; i < ret.data[0].days.length; i++) {
             for (let x = 0; x < ret.data[0].days[i].entryExit.length; x++) {
               myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
-              let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
               myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
-              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
               myDate.setTime(ret.data[0].days[i].timeWorked);
 
 
@@ -343,9 +343,7 @@
 
               formatedTimeWorked = `${addZero(h)} : ${formatedTimeWorked}`;
 
-
-
-              if (formatedExit == "NaN:NaN:NaN")
+              if (formatedExit == "NaN:NaN")
                 formatedExit = "";
 
               cdh.push({

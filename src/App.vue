@@ -2,12 +2,16 @@
   <v-app id="app2" dark>
 
     <v-toolbar
-      app fixed clipped-left v-if="isLogged" dark>
+      app fixed clipped-left v-if="isLogged" teste dark>
+
+
+
+      <v-toolbar-title class="white--text" v-text="toolbarTitle">  </v-toolbar-title>
 
 
       <v-layout wrap justify-end>
 
-        <v-toolbar-title class="white--text"></v-toolbar-title>
+
 
         <v-spacer></v-spacer>
         <v-tooltip color="primary" bottom>
@@ -55,7 +59,7 @@
 
 
     <v-footer app fixed dark>
-      <span>&copy; by Burgodev</span>
+      <span>&copy; 2019 by Burgodev</span>
 
 
     </v-footer>
@@ -71,6 +75,14 @@
     UserAPI,
   } from './requests';
 
+  function addZero(i) {
+
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+
   @Component({
     components: {},
   })
@@ -81,6 +93,8 @@
     data: () => ({
       selectedButtonColorCdh: false,
       selectedButtonColorUser: false,
+      titleName: '',
+      titleHoursLeft: '80',
 
       get isAdm() {
         return localStorage.getItem('isAdm');
@@ -106,9 +120,28 @@
       isLogged() {
         return this.$route.path !== '/login'
       },
+
+      toolbarTitle(){
+        this.titleName = localStorage.getItem('name');
+        let hoursLeft = Number(localStorage.getItem('workTimeLeft'));
+        let myDate = new Date();
+        let hours, days;
+
+        myDate.setTime(hoursLeft);
+        hours = myDate.getHours() + 3;
+        days = myDate.getDate();
+
+        hours = (24 * (days -1)) + hours;
+
+        this.titleHoursLeft = `${(addZero(hours))}:${addZero(myDate.getMinutes())}`;
+
+        return `${this.titleName}  - ${this.titleHoursLeft} horas restantes` ;
+      }
     },
 
     methods: {
+
+
       async logout() {
         let ret = await UserAPI.logout();
         console.log('logout', ret);

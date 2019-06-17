@@ -39,7 +39,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            @click="cancel"
+            @click="close"
             round
             outline
             small
@@ -80,6 +80,7 @@
         valid: true,
         text: null,
         time: '04:00',
+        updateTable: null,
 
         data: {
           day: null,
@@ -131,23 +132,24 @@
           text: this.text
         };
 
-        console.log(data);
-
 
         let ret = await AdminAPI.justifyAbsence(data);
-        console.log('JustifyAbsence', ret)
+        console.log('JustifyAbsence', ret);
 
-        this.dialog = false;
+
+        this.updateTable();
+        this.close();
       },
 
-      open(data) {
+      open(data, fn, fn2) {
+        this.updateTable = fn;
         this.dialog = true;
         this.data = data;
 
-        console.log(data);
       },
 
-      cancel() {
+      close() {
+        this.text='';
         this.dialog = false;
       },
     }

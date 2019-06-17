@@ -43,6 +43,16 @@
         <v-card-actions>
           <v-layout justify-end wrap>
             <v-btn
+              @click="close"
+              round
+              outline
+              small
+              class="custom-btn mt-2 mb-1"
+            >
+              Cancelar
+            </v-btn>
+
+            <v-btn
               @click="confirm"
               :disabled="!valid"
               round
@@ -60,6 +70,7 @@
 
     <SessionConfirmation ref="SessionConfirmation"/>
     <ChangePassword ref="ChangePassword"/>
+    <ExpectedExitError ref="ExpectedExitError"/>
 
   </div>
 </template>
@@ -68,11 +79,12 @@
   import {UserAPI} from '../requests';
   import SessionConfirmation from "./SessionConfirmation";
   import ChangePassword from "./ChangePassword";
+  import ExpectedExitError from "./ExpectedExitError";
 
 
   export default {
     name: "ExpectedExit",
-    components: {SessionConfirmation, ChangePassword},
+    components: {SessionConfirmation, ChangePassword, ExpectedExitError},
 
     data() {
       return {
@@ -90,6 +102,7 @@
       },
 
       close() {
+        this.updateTable();
         this.dialog = false
       },
 
@@ -111,13 +124,17 @@
         console.log('expectedExit', ret);
 
         if (ret.success) {
-          localStorage.setItem("sessionOpen", "true");
+
+          this.$refs.SessionConfirmation.open();
+        }else{
+          localStorage.setItem("sessionOpen", "false");
+          this.$refs.ExpectedExitError.open();
+
         }
 
 
-        this.$refs.SessionConfirmation.open();
 
-        this.updateTable();
+
         this.close();
       }
     }

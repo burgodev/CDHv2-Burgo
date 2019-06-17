@@ -234,7 +234,6 @@
 
     computed: {
       sessionButton() {
-        let myDate = new Date();
 
         if (this.selected) return 'primary';
 
@@ -252,14 +251,11 @@
         for (let i = 0; i < this.users.length; i++) {
           if (this.users[i].name === localStorage.getItem('name'))
             this.selectUser = this.users[i];
-        }
-        ;
-
+        };
 
         this.getUser();
         this.adminCdhSearch();
         this.getCdhYears();
-
 
         this.selectedYear = myDate.getFullYear();
 
@@ -268,10 +264,9 @@
         } else {
           this.selected = false;
           sessionStorage.setItem('lastDay', String(myDate.getDate()));
-          console.log('caiu aqui1', sessionStorage.getItem('lastDay'))
+
         }
-      }
-      ,
+      },
 
       showJustifyAbsence(item) {
         let data = {
@@ -283,7 +278,8 @@
         };
         console.log('data', data)
 
-        this.$refs.JustifyAbsence.open(data)
+        this.$refs.JustifyAbsence.open(data, this.initialize.bind(this), this.adminCdhSearch.bind(this))
+
       },
 
       async sessionControl() {
@@ -295,6 +291,7 @@
       },
 
       async adminCdhSearch() {
+        console.log('caiu cdh seracrh')
         let date = new Date();
         let month, year;
         let id;
@@ -332,14 +329,29 @@
           //percorre cada sessao dentro de cada dia
           for (let i = 0; i < ret.data[0].days.length; i++) {
             for (let x = 0; x < ret.data[0].days[i].entryExit.length; x++) {
+              // myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
+              // let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              //
+              // myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
+              // let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              //
+              // myDate.setTime(ret.data[0].days[i].timeWorked);
+              // let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
+              //
+
+
               myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
-              let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
+
               myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
-              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
+              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
+
+
+
               myDate.setTime(ret.data[0].days[i].timeWorked);
-
-
               let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
+
+
 
               let h = 0;
               while(formatedTimeWorked > 60){
@@ -347,10 +359,17 @@
                 formatedTimeWorked - 60;
               }
 
+
               formatedTimeWorked = `${addZero(h)} : ${formatedTimeWorked}`;
 
-              if (formatedExit == "NaN:NaN:NaN")
+              if (formatedExit == "NaN:NaN")
                 formatedExit = "";
+
+
+                localStorage.setItem('workTimeLeft', ret.data[0].workTimeLeft);
+
+
+
 
               cdh.push({
                 day: ret.data[0].days[i].day,
@@ -387,8 +406,7 @@
           for (let i = 0; i < this.users.length; i++) {
             if (this.users[i].name === localStorage.getItem('name'))
               this.selectUser = this.users[i];
-          }
-          ;
+          };
 
         }
       },
@@ -403,6 +421,8 @@
 
           year -= 1;
         }
+
+
       },
 
     }
