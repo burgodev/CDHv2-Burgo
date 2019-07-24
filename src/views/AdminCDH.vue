@@ -300,10 +300,10 @@
 
 
 
-        // localStorage.setItem('workTimeLeft', ret.data[0].workTimeLeft);
+        localStorage.setItem('workTimeLeft', ret.data[0].workTimeLeft);
 
 
-        // this.$store.commit('set', ret.data[0].);
+
 
         //Alimenta a table
         let cdh = [];

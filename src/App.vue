@@ -115,7 +115,7 @@
 
       toolbarTitle(){
         this.titleName = localStorage.getItem('name');
-        let hoursLeft = Number(localStorage.getItem(''));
+        let hoursLeft = Number(localStorage.getItem('workTimeLeft'));
         let myDate = new Date();
         let hours, days;
 
