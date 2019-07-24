@@ -2,17 +2,11 @@
   <v-app id="app2" dark>
 
     <v-toolbar
-      app fixed clipped-left v-if="isLogged" teste dark>
+      app fixed clipped-left v-if="isLogged" dark>
 
-
-
-      <v-toolbar-title class="white--text" v-text="toolbarTitle">  </v-toolbar-title>
-
+      <v-toolbar-title class="white--text" v-text="toolbarTitle"></v-toolbar-title>
 
       <v-layout wrap justify-end>
-
-
-
         <v-spacer></v-spacer>
         <v-tooltip color="primary" bottom>
           <template v-slot:activator="{ on }">
@@ -35,11 +29,6 @@
           <span class="black--text"> Usuários </span>
         </v-tooltip>
 
-        <!--<v-btn v-on:click="logout" class="custom-btn" outline  round small text>-->
-        <!--<v-icon class="custom-btn">logout</v-icon>-->
-        <!--</v-btn>-->
-
-
         <v-tooltip color="primary" bottom>
           <template v-slot:activator="{ on }">
             <v-btn v-on:click="logout" v-on="on" round outline small class="custom-btn">
@@ -49,31 +38,27 @@
           <span class="black--text"> Sair </span>
         </v-tooltip>
       </v-layout>
-
     </v-toolbar>
-
 
     <v-content class="timeRegister-color">
       <router-view/>
     </v-content>
 
-
     <v-footer app fixed dark>
-      <span>&copy; 2019 by Burgodev</span>
-
+      <span>&copy; 2019 by BurgoDev</span>
 
     </v-footer>
-
-
   </v-app>
 </template>
 
 
 <script lang="ts">
+  import { State, Action, Getter } from 'vuex-class';
   import {Component, Vue} from 'vue-property-decorator';
   import {
     UserAPI,
   } from './requests';
+
 
   function addZero(i) {
 
@@ -94,13 +79,16 @@
       selectedButtonColorCdh: false,
       selectedButtonColorUser: false,
       titleName: '',
-      titleHoursLeft: '80',
+      titleHoursLeft: '',
 
       get isAdm() {
         return localStorage.getItem('isAdm');
       },
-    }),
 
+      get () {
+        return localStorage.getItem('');
+      }
+    }),
 
     computed: {
       selectedButtonCdh() {
@@ -118,37 +106,46 @@
       },
 
       isLogged() {
-        return this.$route.path !== '/login'
+        return this.$route.path !== '/'
       },
+      // () {
+      //   return localStorage.getItem('');
+      // }
+
 
       toolbarTitle(){
         this.titleName = localStorage.getItem('name');
-        let hoursLeft = Number(localStorage.getItem('workTimeLeft'));
+        let hoursLeft = Number(localStorage.getItem(''));
         let myDate = new Date();
         let hours, days;
 
         myDate.setTime(hoursLeft);
-        hours = myDate.getHours() + 3;
-        days = myDate.getDate();
 
-        hours = (24 * (days -1)) + hours;
+        if (myDate.getTime() > 97199999){
+          hours = myDate.getHours() + 3;
+          console.log(hours)
+          days = myDate.getDate();
 
-        this.titleHoursLeft = `${(addZero(hours))}:${addZero(myDate.getMinutes())}`;
+          hours = (24 * (days -1)) + hours;
 
-        return `${this.titleName}  - ${this.titleHoursLeft} horas restantes` ;
+          this.titleHoursLeft = `${(addZero(hours))}:${addZero(myDate.getMinutes())}`;
+
+          return `${this.titleName}  - ${this.titleHoursLeft} horas restantes` ;
+        }
+
+        else {
+          return `${this.titleName}  - 0 horas restantes` ;
+        }
       }
     },
 
     methods: {
-
-
       async logout() {
         let ret = await UserAPI.logout();
-        console.log('logout', ret);
 
         this.selectedButtonColorCdh = true;
         this.selectedButtonColorUser = false;
-        this.$router.replace('/login');
+        this.$router.replace('/');
       },
 
       showUsers() {
@@ -158,16 +155,11 @@
       },
 
       showCdh() {
-        console.log('teste')
         this.selectedButtonColorCdh = true;
         this.selectedButtonColorUser = false;
         this.$router.replace('/AdminCDH');
-
       },
 
-      changeColor() {
-
-      }
     }
   }
 
@@ -195,24 +187,13 @@
     color: #42b983;
   }
 
-  /*!*333333*!*/
-  /*.timeRegister-color {*/
-  /*background-image: radial-gradient(#5a5a5a, #212121);*/
-  /*}*/
-
   .timeRegister-color {
     background-image: radial-gradient(rgba(99, 99, 99, 0.82), #0c0c0c);
   }
 
-  /*.timeRegister-color {*/
-  /*background-image: radial-gradient(rgba(130, 130, 130, 0.82), #171717);*/
-  /*}*/
-
 
   .custom-btn:hover {
     color: #ffd02d !important;
-    /*color: #3abcb1 !important;*/
-
   }
 
 

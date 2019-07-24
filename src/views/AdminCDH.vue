@@ -19,7 +19,6 @@
             vertical
           ></v-divider>
 
-
           <v-flex xs6 sm6 md4 d-flex>
             <v-select
               class="mt-3"
@@ -32,8 +31,6 @@
               label="Usuário"
             ></v-select>
           </v-flex>
-
-
           <v-spacer></v-spacer>
 
           <v-flex xs6 sm6 md2 d-flex>
@@ -61,7 +58,6 @@
             ></v-select>
           </v-flex>
 
-
           <v-spacer></v-spacer>
 
           <v-divider
@@ -69,7 +65,6 @@
             vertical
             inset
           ></v-divider>
-
 
           <v-layout justify-end align-end class="mt-1">
             <v-tooltip color="primary" bottom>
@@ -83,8 +78,6 @@
             </v-tooltip>
 
           </v-layout>
-
-
         </v-toolbar>
 
         <v-data-table
@@ -92,10 +85,8 @@
           :items="timeRegister"
           :search="search"
           class="elevation-1"
-
         >
           <template v-slot:items="props">
-
             <td class="text-xs-center">{{ props.item.day }}</td>
             <td class="text-xs-center">{{ props.item.entry }}</td>
             <td class="text-xs-center">{{ props.item.exit }}</td>
@@ -118,12 +109,9 @@
           </template>
 
         </v-data-table>
-
-
         <JustifyAbsence ref="JustifyAbsence"/>
         <ExpectedExit ref="ExpectedExit"/>
         <EndSessionConfirmation ref="EndSessionConfirmation"/>
-
       </v-flex>
     </v-layout>
   </v-container>
@@ -138,7 +126,6 @@
   import EndSessionConfirmation from "../components/EndSessionConfirmation";
 
   function addZero(i) {
-
     if (i < 10) {
       i = "0" + i;
     }
@@ -156,17 +143,21 @@
       selectedYear: null,
       selected: false,
       editedIndex: -1,
+      dateste:{
+        descending: true,
+        page: 1,
+        rowsPerPage: 10,
+        sortBy: "day",
+      },
 
       headers: [
-
         {text: 'Dia', value: 'day', align: 'center'},
         {text: 'Entrada', value: 'entry', align: 'center'},
         {text: 'Saída', value: 'exit', align: 'center'},
         {text: 'Horas Trabalhadas', value: 'timeWorked', align: 'center'},
         {text: 'Justificativa', sortable: false, align: 'center'},
-
-
       ],
+
       timeRegister: [],
       users: [],
       usersIndex: -1,
@@ -221,9 +212,7 @@
           Value: 11
         },
       ],
-
       year: []
-
     }),
 
 
@@ -231,15 +220,9 @@
       this.initialize()
     },
 
-
     computed: {
       sessionButton() {
-
         if (this.selected) return 'primary';
-
-        // if (localStorage.getItem('sessionOpen') === "true" && Number(sessionStorage.getItem('lastDay')) === myDate.getDate()) {
-        //   this.selected = true
-        // }
       }
     },
 
@@ -276,7 +259,6 @@
           userId: this.selectUser.id,
           currentTimeRegister: this.selectUser.currentTimeRegister
         };
-        console.log('data', data)
 
         this.$refs.JustifyAbsence.open(data, this.initialize.bind(this), this.adminCdhSearch.bind(this))
 
@@ -291,7 +273,6 @@
       },
 
       async adminCdhSearch() {
-        console.log('caiu cdh seracrh')
         let date = new Date();
         let month, year;
         let id;
@@ -314,82 +295,71 @@
           id = this.selectUser.id;
         }
 
-
         let ret = await AdminAPI.adminCdhConsult(id, month, year);
-        console.log('adminCdhConsult', ret);
+        console.log('ret',ret)
+
+
+
+        // localStorage.setItem('workTimeLeft', ret.data[0].workTimeLeft);
+
+
+        // this.$store.commit('set', ret.data[0].);
 
         //Alimenta a table
         let cdh = [];
 
-
-
         if (ret.data.length) {
           let myDate = new Date();
+          let myDate2 = new Date();
+          let myDate3 = new Date();
 
           //percorre cada sessao dentro de cada dia
           for (let i = 0; i < ret.data[0].days.length; i++) {
             for (let x = 0; x < ret.data[0].days[i].entryExit.length; x++) {
-              // myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
-              // let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-              //
-              // myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
-              // let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}:${addZero(myDate.getSeconds())}`;
-              //
-              // myDate.setTime(ret.data[0].days[i].timeWorked);
-              // let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
-              //
-
-
               myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
               let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
 
-              myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
-              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
+              myDate2.setTime(ret.data[0].days[i].entryExit[x].exit);
+              let formatedExit = `${addZero(myDate2.getHours())}:${addZero(myDate2.getMinutes())}`;
 
-
-
-              myDate.setTime(ret.data[0].days[i].timeWorked);
-              let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
-
-
-
+              myDate3.setTime(Number(myDate2.getTime()) - Number(myDate.getTime()));
+              let formatedTimeWorked = `${addZero(myDate3.getMinutes())}`;
               let h = 0;
-              while(formatedTimeWorked > 60){
+              while (formatedTimeWorked > 60) {
                 h++
                 formatedTimeWorked - 60;
               }
-
 
               formatedTimeWorked = `${addZero(h)} : ${formatedTimeWorked}`;
 
               if (formatedExit == "NaN:NaN")
                 formatedExit = "";
 
+              if (formatedTimeWorked == "00 : NaN")
+                formatedTimeWorked = "";
 
-                localStorage.setItem('workTimeLeft', ret.data[0].workTimeLeft);
+              if (formatedTimeWorked == "NaN:NaN")
+                formatedTimeWorked = "";
 
 
-
+              // if (!localStorage.getItem('')) {
+              //   localStorage.setItem('', ret.data[0].workTimeLeft);
+              // }
 
               cdh.push({
                 day: ret.data[0].days[i].day,
                 entry: formatedEntry,
                 exit: formatedExit,
-                timeWorked: formatedTimeWorked ,
-                // timeWorked: ret.data[0].days[i].timeWorked ,
+                timeWorked: formatedTimeWorked,
                 justification: ret.data[0].days[i].justification
 
               });
-
-              // let lastDay = ret.data[0].days[i].day;
-              // sessionStorage.setItem('lastDay', lastDay)
             }
           }
 
         }
         this.timeRegister = cdh;
-      }
-      ,
+      },
 
       async getUser() {
         let ret = await AdminAPI.readAllUsers();
@@ -403,11 +373,11 @@
               localStorage.setItem('currentTimeRegister', this.users[i].currentTimeRegister)
             }
           }
+
           for (let i = 0; i < this.users.length; i++) {
             if (this.users[i].name === localStorage.getItem('name'))
               this.selectUser = this.users[i];
-          };
-
+          }
         }
       },
 
@@ -421,10 +391,7 @@
 
           year -= 1;
         }
-
-
       },
-
     }
   }
 

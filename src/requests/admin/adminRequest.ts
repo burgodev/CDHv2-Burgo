@@ -60,7 +60,6 @@ export class adminRequests {
 
   public async updateUser(update: any) {
     try {
-      console.log('update dentro da função request', update)
       let ret = await axios({
         baseURL: `${this.config.protocol}://${this.config.baseUrl}:${this.config.port}/`,
         url: '/api/admin/user/update',

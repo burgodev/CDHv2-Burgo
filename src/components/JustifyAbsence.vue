@@ -1,5 +1,4 @@
 <template>
-
   <div class="text-xs-center">
     <v-dialog
       v-model="dialog"
@@ -60,6 +59,7 @@
           </v-btn>
 
         </v-card-actions>
+        <JustifyAbsenceConfirmation ref="JustifyAbsenceConfirmation"/>
 
       </v-card>
     </v-dialog>
@@ -70,9 +70,12 @@
   import {
     AdminAPI,
   } from '../requests';
+  import JustifyAbsenceConfirmation from "./JustifyAbsenceConfirmation";
+
 
   export default {
     name: "JustifyAbsence",
+    components: {JustifyAbsenceConfirmation},
 
     data() {
       return {
@@ -91,33 +94,11 @@
           justification:{},
         },
 
-        //
-        // hoursRules: [
-        //   v => !!v || 'Este campo é obrigatório',
-        //   v => (v && v.length >= 4) || 'Preencha este campo corretamente! (hh:mm)',
-        // ],
-        //
-        // justificationRules: [
-        //   v => !!v || 'Este campo é obrigatório!',
-        // ],
-
         select: null,
       }
     },
 
     methods: {
-      // validate () {
-      //   if (this.$refs.form.validate()) {
-      //     this.snackbar = true
-      //   }
-      // },
-      // reset () {
-      //   this.$refs.form.reset()
-      // },
-      // resetValidation () {
-      //   this.$refs.form.resetValidation()
-      // }
-
       async confirm() {
         let timeStampHour = (this.time.slice(0, 2) * 60 * 60 * 1000);
         let timeStampMin = (this.time.slice(3, 5) * 60 * 1000);
@@ -134,18 +115,19 @@
 
 
         let ret = await AdminAPI.justifyAbsence(data);
-        console.log('JustifyAbsence', ret);
+        console.log('jutisfyAbsence', ret);
 
-
-        this.updateTable();
-        this.close();
+        if (ret.success){
+          this.close();
+          this.updateTable();
+          this.$refs.JustifyAbsenceConfirmation.open(this.updateTable);
+        }
       },
 
-      open(data, fn, fn2) {
+      open(data, fn) {
         this.updateTable = fn;
         this.dialog = true;
         this.data = data;
-
       },
 
       close() {

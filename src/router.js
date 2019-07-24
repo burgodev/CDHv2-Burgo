@@ -4,11 +4,17 @@ import Login from './views/Login.vue';
 import AdminCDH from './views/AdminCDH.vue';
 import Users from './views/Users.vue';
 import UserCDH from './views/UserCDH.vue';
+import ToDoWithoutStore from './components/ToDoWithoutStore.vue';
 Vue.use(Router);
 export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
+        {
+            path: '/',
+            name: 'login',
+            component: Login
+        },
         {
             path: '/login',
             name: 'login',
@@ -28,6 +34,11 @@ export default new Router({
             path: '/users',
             name: 'Users',
             component: Users
+        },
+        {
+            path: '/ToDoWithoutStore',
+            name: 'ToDoWithoutStore',
+            component: ToDoWithoutStore
         },
     ]
 });

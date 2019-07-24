@@ -1,6 +1,23 @@
 import {adminRequests} from './admin/adminRequest';
 import {openRequests} from './open/openRequest';
 import {userRequest} from "@/requests/user/userRequest";
+import Vue from 'vue';
+import Vuex, { StoreOptions } from 'vuex';
+import { RootState } from '@/types';
+import { profile } from '@/profile/index.ts';
+
+Vue.use(Vuex);
+
+const store: StoreOptions<RootState> = {
+  state: {
+    version: '1.0.0' // a simple property
+  },
+  modules: {
+    profile
+  }
+};
+
+export default new Vuex.Store<RootState>(store);
 
 let configs: config = {
   port: 1337,

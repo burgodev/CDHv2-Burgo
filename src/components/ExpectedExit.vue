@@ -81,7 +81,6 @@
   import ChangePassword from "./ChangePassword";
   import ExpectedExitError from "./ExpectedExitError";
 
-
   export default {
     name: "ExpectedExit",
     components: {SessionConfirmation, ChangePassword, ExpectedExitError},
@@ -118,22 +117,15 @@
 
         let expectedExit = date.getTime();
 
-        console.log(id);
-
         let ret = await UserAPI.entry(id, expectedExit);
-        console.log('expectedExit', ret);
 
         if (ret.success) {
-
+          localStorage.setItem("sessionOpen", "true");
           this.$refs.SessionConfirmation.open();
         }else{
           localStorage.setItem("sessionOpen", "false");
           this.$refs.ExpectedExitError.open();
-
         }
-
-
-
 
         this.close();
       }

@@ -49,14 +49,6 @@
 
 
           <v-dialog persistent v-model="dialog" max-width="500px">
-            <!--<template v-slot:activator="{ on }">-->
-            <!--<v-btn icon fab round class="custom-btn" v-on="on"-->
-            <!--&gt;-->
-            <!--<v-icon class="custom-btn" dark>add</v-icon>-->
-            <!--</v-btn>-->
-            <!--</template>-->
-
-
             <v-card>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
@@ -259,9 +251,6 @@
               Your search for "{{ search }}" found no results.
             </v-alert>
           </template>
-          <!--<template v-slot:no-data>-->
-          <!--&lt;!&ndash;<v-btn color="primary" @click="initialize">Reset</v-btn>&ndash;&gt;-->
-          <!--</template>-->
         </v-data-table>
 
         <ChangePassword ref="ChangePassword"/>
@@ -369,11 +358,8 @@
     methods: {
       async initialize() {
         let ret = await AdminAPI.readAllUsers();
-        console.log('readAllUsers', ret);
 
         let myDate = new Date();
-
-        console.log('length', ret.data.length);
 
         for (let i = 0; i < ret.data.length; i++) {
 
@@ -416,19 +402,7 @@
       async deleteItem(item) {
         const index = this.users.indexOf(item);
 
-        // if (window.confirm('Are you sure you want to delete this item?')) {
-        //
-        //   let ret = await AdminAPI.deleteUser(this.users[index].id);
-        //   console.log('delete', ret);
-        // }
-
         this.$refs.DeleteUser.open(this.users[index].id, this.initialize.bind(this));
-
-
-
-
-
-        // this.initialize();
       }
       ,
 
@@ -442,9 +416,6 @@
       ,
 
       async save() {
-        // if (this.editedIndex > -1) {
-        //update user => NAO TA FUNCIONANTE
-        // Object.assign(this.users[this.editedIndex], this.editedItem);
 
         let update = {
           id: this.editedItem.id,
@@ -453,11 +424,7 @@
           }
         };
 
-        console.log('vai passar isso pro updateUser', update);
-
         let ret = await AdminAPI.updateUser(update);
-
-        console.log('update user', ret)
 
 
         this.close();
@@ -488,7 +455,6 @@
       ,
 
       showCreateUser() {
-        console.log('createUser')
         this.$refs.CreateUser.open(this.initialize.bind(this), true);
 
       }

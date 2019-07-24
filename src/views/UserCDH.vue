@@ -133,7 +133,6 @@
     AdminAPI
   } from '../requests';
 
-
   function addZero(i) {
     if (i < 10) {
       i = "0" + i;
@@ -150,7 +149,7 @@
       selectedMonth: null,
       selectedYear: null,
       selected: false,
-      workTimeLeft: 20,
+      workTimeLeft: 0,
       headers: [
 
         {text: 'Dia', value: 'day', align: 'center'},
@@ -235,8 +234,6 @@
           return 'primary';
         }
       }
-
-
     },
 
     methods: {
@@ -249,13 +246,10 @@
           id: localStorage.getItem('id')
         }];
 
-
-
         this.selectUser = this.users[0];
 
         this.userCdhSearch();
         this.getCdhYears();
-        // this.getUser();
 
         this.selectedYear = myDate.getFullYear();
 
@@ -265,7 +259,6 @@
           this.selected = false;
           sessionStorage.setItem('lastDay', String(myDate.getDate()));
         }
-
       },
 
       hasJustification(data) {
@@ -276,12 +269,9 @@
 
 
       showJustifyAbsenceUser(data) {
-
         if (data.justification) {
           this.$refs.JustifyAbsenceUser.open(data)
         }
-
-
       },
 
       async sessionControl() {
@@ -318,68 +308,64 @@
         console.log('userCdhConsult', ret);
 
 
+        this.$emit('coco');
+
+
+
         //Alimenta a table
         let cdh = [];
         if (ret.data.length) {
           let myDate = new Date();
+          let myDate2 = new Date();
+          let myDate3 = new Date();
 
           //percorre cada sessao dentro de cada dia
           for (let i = 0; i < ret.data[0].days.length; i++) {
             for (let x = 0; x < ret.data[0].days[i].entryExit.length; x++) {
               myDate.setTime(ret.data[0].days[i].entryExit[x].entry);
               let formatedEntry = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
-              myDate.setTime(ret.data[0].days[i].entryExit[x].exit);
-              let formatedExit = `${addZero(myDate.getHours())}:${addZero(myDate.getMinutes())}`;
-              myDate.setTime(ret.data[0].days[i].timeWorked);
 
+              myDate2.setTime(ret.data[0].days[i].entryExit[x].exit);
+              let formatedExit = `${addZero(myDate2.getHours())}:${addZero(myDate2.getMinutes())}`;
 
-              let formatedTimeWorked = `${addZero(myDate.getMinutes())}`;
-
+              myDate3.setTime(Number(myDate2.getTime()) - Number(myDate.getTime()));
+              let formatedTimeWorked = `${addZero(myDate3.getMinutes())}`;
               let h = 0;
-              while(formatedTimeWorked > 60){
-                h++
+              while (formatedTimeWorked > 60) {
                 formatedTimeWorked - 60;
+                h++;
               }
+
 
               formatedTimeWorked = `${addZero(h)} : ${formatedTimeWorked}`;
 
+
               if (formatedExit == "NaN:NaN")
                 formatedExit = "";
+
+              if (formatedTimeWorked == "00 : NaN")
+                formatedTimeWorked = "";
+
+              if (formatedTimeWorked == "NaN:NaN")
+                formatedTimeWorked = "";
+
+
+              // if(!localStorage.getItem('workTimeLeft')){
+              //   localStorage.setItem('workTimeLeft', ret.data[0].workTimeLeft);
+              // }
 
               cdh.push({
                 day: ret.data[0].days[i].day,
                 entry: formatedEntry,
                 exit: formatedExit,
-                // timeWorked: (ret.data[0].days[i].timeWorked / 3600 / 1000),
                 timeWorked: formatedTimeWorked,
                 justification: ret.data[0].days[i].justification
               });
-
-              // let lastDay = ret.data[0].days[0].day;
-              // sessionStorage.setItem('lastDay', lastDay)
             }
           }
         }
         this.timeRegister = cdh;
       },
-
-
-      // async getUser() {
-      //   let ret = await AdminAPI.readAllUsers();
-      //   console.log('getUser', ret)
-      //
-      //   if (ret.success) {
-      //     this.users = ret.data;
-      //
-      //     for (let i = 0; i < this.users.length; i++) {
-      //       if (this.users[i].id === localStorage.getItem('id')) {
-      //         localStorage.setItem('currentTimeRegister', this.users[i].currentTimeRegister)
-      //       }
-      //     }
-      //     this.selectUser = this.users[0];
-      //   }
-      // },
-
 
       getCdhYears() {
         let myDate = new Date();

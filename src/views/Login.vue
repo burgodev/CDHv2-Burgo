@@ -73,18 +73,7 @@
 
     methods: {
 
-      onEnter: function() {
-        alert('teste')
-      },
-
-
-
       async login() {
-
-        if (localStorage.getItem('sessionOpen') === 'true')
-          localStorage.setItem('sessionOpen', 'true')
-
-
           let ret = await OpenAPI.login({login: this.user.login, password: this.user.password});
           console.log('login', ret)
 
@@ -92,15 +81,12 @@
             localStorage.setItem('authenticationKey', ret.data.authenticationKey);
             localStorage.setItem('accessKey', ret.data.accessKey);
             localStorage.setItem('id', ret.data.id);
-            localStorage.setItem('name', ret.data.name)
+            localStorage.setItem('name', ret.data.name);
+            localStorage.removeItem('');
 
             ret.data.isAdm ?
               (this.$router.replace('/AdminCDH'), localStorage.setItem('isAdm', 'true'), sessionStorage.setItem('adminCDH', 'true'))  :
               (this.$router.replace('/UserCDH'), localStorage.removeItem('isAdm'));
-
-
-            // console.log(this.App.isAdm = true);
-
           }
         }
       ,
